@@ -1,35 +1,33 @@
 import 'package:apptest/config/palette.dart';
 import 'package:flutter/material.dart';
-import 'package:apptest/screens/login_screen.dart';
+import 'package:apptest/screens/friend_screen.dart';
+import 'package:apptest/screens/chat_screen.dart';
+import 'package:apptest/screens/profile_screen.dart';
+import 'package:apptest/screens/reservation_screen.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  int floor;
+  final waitings;
+  final reservated;
+  HomeScreen({super.key, required this.floor, required this.waitings, required this.reservated});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  // int _counter = 0;
-
-  // void _incrementCounter() {
-  //   setState(() {
-  //     _counter++;
-  //   });
-  //   Navigator.of(context).push(MaterialPageRoute(builder: (context) => const LoginScreen()));
-  //   Navigator.push(context, MaterialPageRoute(builder: (context) => SecondPage()));
-  //   //MaterialPageRoute(builder: (context) => const LoginScreen());
-  // }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Palette.backgroundColor,
       appBar: AppBar(
-        toolbarHeight: 80,
+        iconTheme: const IconThemeData(
+          color: Palette.khsilver,
+        ),
         backgroundColor: Palette.khblue,
         title: const Text(
-          'KyungHee Topia!!',
+          'Laundry',
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
@@ -37,41 +35,177 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       body: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Container(
             color: Palette.backgroundColor,
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height - 80 - 60 - 51,
-            //height: 100,
+            child: Column(
+              children: [
+                Container(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Container(
+                        width: 80,
+                        height: 60,
+                        child: DropdownButton(
+                          isExpanded: true,
+                          items: const [
+                            DropdownMenuItem(
+                              value: 1,
+                              child: Text(
+                                '1층',
+                                style: TextStyle(
+                                  fontSize: 30,
+                                ),
+                              ),
+                            ),
+                            DropdownMenuItem(
+                              value: 2,
+                              child: Text(
+                                '2층',
+                                style: TextStyle(
+                                  fontSize: 30,
+                                ),
+                                ),
+                            ),
+                            DropdownMenuItem(
+                              value: 3,
+                              child: Text(
+                                '3층',
+                                style: TextStyle(
+                                  fontSize: 30,
+                                ),
+                                ),
+                            ),
+                          ],
+                          onChanged: (int? value){
+                            setState(() {
+                              widget.floor = value!;
+                            });
+                          },
+                          value: widget.floor,
+                        ),
+                        ),
+                      IconButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ProfileScreen(),
+                            ),
+                          );
+                        },
+                        icon: Icon(
+                          Icons.account_circle,
+                          color: Palette.khblue,
+                          size: 40,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                if (widget.reservated)
+                  Text(
+                    '내 예약',
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  ),
+                if (widget.reservated)
+                  SizedBox(height: 10),
+                if (widget.reservated)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Icon(
+                        Icons.local_laundry_service,
+                        size: 40,
+                      ),
+                      Icon(
+                        Icons.dry_cleaning,
+                        size: 40,
+                      ),
+                    ],
+                  ),
+                Text(
+                  '세탁기',
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: List.generate(3, (index) {
+                    return IconButton(
+                      icon: Icon(Icons.local_laundry_service, size: 40),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ReservationScreen(waitings: widget.waitings, reservated: widget.reservated),
+                          ),
+                        );
+                      },
+                    );
+                  }),
+                ),
+                SizedBox(height: 30),
+                Text(
+                  '건조기',
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: List.generate(2, (index) {
+                    return IconButton(
+                      icon: Icon(Icons.dry_cleaning, size: 40),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ReservationScreen(waitings: widget.waitings, reservated: widget.reservated),
+                          ),
+                        );
+                      },
+                    );
+                  }),
+                ),
+              ],
+            ),
           ),
           Container(
             height: 60,
-            color: Palette.khred,
+            color: Palette.khblue,
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 IconButton(
                   onPressed: (){
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginScreen()));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => FriendScreen(reservated: widget.reservated)));
                   },
                   icon: const Icon(
                     Icons.people,
+                    color: Palette.khsilver,
+                    size: 40,
                   ),
                 ),
                 IconButton(
                   onPressed: (){
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginScreen()));
+                    //Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreen()));
                   },
                   icon: const Icon(
-                    Icons.home,
+                    Icons.local_laundry_service,
+                    color: Palette.khsilver,
+                    size: 40,
                   ),
                 ),
                 IconButton(
                   onPressed: (){
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginScreen()));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => ChatScreen(reservated: widget.reservated,)));
                   },
                   icon: const Icon(
                     Icons.chat,
+                    color: Palette.khsilver,
+                    size: 40,
                   ),
                 ),
               ],
@@ -79,132 +213,6 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: (){
-      //     Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginScreen()));
-      //   },
-      //   tooltip: 'Increment',
-      //   child: const Icon(Icons.add),
-        
-      // ),
     );
   }
 }
-
-
-// class HomeScreen extends StatefulWidget{
-//   const HomeScreen({Key? key}) : super(key: key);
-
-//   @override
-//   HomeScreenState createState() => HomeScreenState();
-// }
-
-// class _HomeScreenState extends State<HomeScreen>{
-//   var isLogin = false;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       backgroundColor: Palette.khblue,
-//       body: Stack(
-//         children: [
-//           Positioned(
-//             bottom: 0,
-//             child: Container(
-//               width: MediaQuery.of(context).size.width,
-//               height: 60,
-//               color: Palette.khsilver,
-//               child: Row(
-//                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                 children: [
-//                   IconButton(
-//                     onPressed: (){
-//                       // if(isLogin){
-//                       //   Navigator.push(
-//                       //     context,
-//                       //     MaterialPageRoute(builder: (context) => const FriendScreen()),
-//                       //   );
-//                       // }
-//                       if(!isLogin){
-//                         Navigator.push(
-//                           context,
-//                           MaterialPageRoute(builder: (context) => const LoginScreen()),
-//                         );
-//                       }
-//                     },
-//                     icon: const Icon(
-//                       Icons.people
-//                     ),
-//                   ),
-//                   IconButton(
-//                     onPressed: (){
-//                       if(!isLogin){
-//                         Navigator.push(
-//                           context,
-//                           MaterialPageRoute(builder: (context) => const LoginScreen()),
-//                         );
-//                       }
-//                     },
-//                     icon: const Icon(
-//                       Icons.home
-//                     ),
-//                   ),
-//                   IconButton(
-//                     onPressed: (){
-//                       // if(isLogin){
-//                       //   Navigator.push(
-//                       //     context,
-//                       //     MaterialPageRoute(builder: (context) => const ChatScreen()),
-//                       //   );
-//                       // }
-//                       if(!isLogin){
-//                         Navigator.push(
-//                           context,
-//                           MaterialPageRoute(builder: (context) => const LoginScreen()),
-//                         );
-//                       }
-//                     },
-//                     icon: const Icon(
-//                       Icons.chat
-//                     ),
-//                   ),
-//                 ],
-//               ),
-//             ),
-//           ),
-//           Positioned(
-//             top: 20,
-//             left: 20,
-//             child: ListView(
-//               scrollDirection: Axis.vertical,
-//               children: const [
-//                 Text(
-//                   '1 층',
-//                   style: TextStyle(
-//                   letterSpacing: 1.0,
-//                   color: Colors.black,
-//                   ),
-//                 ),
-//                 Text(
-//                   '2 층',
-//                   style: TextStyle(
-//                   letterSpacing: 1.0,
-//                   color: Colors.black,
-//                   ),
-//                 ),
-//                 Text(
-//                   '3 층',
-//                   style: TextStyle(
-//                   letterSpacing: 1.0,
-//                   color: Colors.black,
-//                   ),
-//                 ),
-//               ],
-//             ),
-//           ),
-//         ],
-//       ),
-
-//     );
-//   }
-// }
