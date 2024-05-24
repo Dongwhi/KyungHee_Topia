@@ -1,9 +1,9 @@
-import 'package:apptest/config/palette.dart'; // 사용할 색 저장해놓은 파일.
+import '../config/palette.dart'; // 사용할 색 저장해놓은 파일.
 import 'package:flutter/material.dart'; // material 스타일 위젯들을 사용하기 위해 import해야하는 것.
-import 'package:apptest/screens/friend_screen.dart'; // 이동하게될 수 있는 페이지들
-import 'package:apptest/screens/chat_screen.dart'; // 이동하게될 수 있는 페이지들
-import 'package:apptest/screens/profile_screen.dart'; // 이동하게될 수 있는 페이지들
-import 'package:apptest/screens/reservation_screen.dart'; // 이동하게될 수 있는 페이지들
+import './friend_screen.dart'; // 이동하게될 수 있는 페이지들
+import './chat_screen.dart'; // 이동하게될 수 있는 페이지들
+import './profile_screen.dart'; // 이동하게될 수 있는 페이지들
+import './reservation_screen.dart'; // 이동하게될 수 있는 페이지들
 
 // 세탁기 현황 페이지
 

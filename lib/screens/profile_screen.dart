@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:apptest/config/palette.dart';
-import 'package:apptest/screens/alarm_screen.dart';
+import '../config/palette.dart';
+import './alarm_screen.dart';
 
 
 class ProfileScreen extends StatefulWidget {

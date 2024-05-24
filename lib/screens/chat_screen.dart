@@ -1,8 +1,8 @@
-import 'package:apptest/config/palette.dart';
+import '../config/palette.dart';
 import 'package:flutter/material.dart';
-import 'package:apptest/screens/home_screen.dart';
-import 'package:apptest/screens/friend_screen.dart';
-import 'package:apptest/screens/addchat_screen.dart';
+import './home_screen.dart';
+import './friend_screen.dart';
+import './addchat_screen.dart';
 
 class ChatScreen extends StatefulWidget {
   final reservated;

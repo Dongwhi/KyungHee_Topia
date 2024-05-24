@@ -1,6 +1,6 @@
-import 'package:apptest/config/palette.dart';
+import '../config/palette.dart';
 import 'package:flutter/material.dart';
-import 'package:apptest/screens/login_screen.dart';
+import './login_screen.dart';
 
 class NoLoginHomeScreen extends StatefulWidget {
   int floor;

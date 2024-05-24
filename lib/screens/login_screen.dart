@@ -1,8 +1,8 @@
-import 'package:apptest/screens/cerification_screen.dart';
+import './cerification_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:apptest/config/palette.dart';
-import 'package:apptest/screens/home_screen.dart';
-import 'package:apptest/screens/no_login_home_screen.dart';
+import '../config/palette.dart';
+import './home_screen.dart';
+import './no_login_home_screen.dart';
 
 class LoginScreen extends StatefulWidget{
   const LoginScreen({super.key});

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:apptest/config/palette.dart';
-import 'package:apptest/screens/signup_screen.dart';
+import '../config/palette.dart';
+import './signup_screen.dart';
 
 class CerificationScreen extends StatefulWidget {
   @override

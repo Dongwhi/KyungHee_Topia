@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:apptest/config/palette.dart';
+import '../config/palette.dart';
 
 
 class AlarmScreen extends StatefulWidget {

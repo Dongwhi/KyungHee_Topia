@@ -1,7 +1,7 @@
-import 'package:apptest/config/palette.dart';
+import '../config/palette.dart';
 import 'package:flutter/material.dart';
-import 'package:apptest/screens/home_screen.dart';
-import 'package:apptest/screens/chat_screen.dart';
+import './home_screen.dart';
+import './chat_screen.dart';
 
 class AddFriendScreen extends StatefulWidget {
   final reservated;

@@ -1,6 +1,5 @@
-import 'package:apptest/config/palette.dart';
 import 'package:flutter/material.dart';
-import 'package:apptest/screens/home_screen.dart';
+import './home_screen.dart';
 
 class ReservationScreen extends StatefulWidget {
   final int waitings;
