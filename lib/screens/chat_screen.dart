@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import './home_screen.dart';
 import './friend_screen.dart';
 import './addchat_screen.dart';
+import './inchat_screen.dart';
 
 class ChatScreen extends StatefulWidget {
   final reservated;
@@ -85,9 +86,16 @@ class ChatScreenState extends State<ChatScreen> {
                   itemCount: filteredChats.length,
                   itemBuilder: (context, index) {
                     return ListTile(
-                      leading: Icon(
-                        Icons.chat,
-                      ),
+                      leading: IconButton(
+                  onPressed: (){
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => InchatScreen(reservated: widget.reservated)));
+                  },
+                  icon: const Icon(
+                    Icons.chat,
+                    color: Palette.khsilver,
+                    size: 40,
+                  ),
+                ),
                       title: Text(filteredChats[index]['name']!),
                     );
                   },
