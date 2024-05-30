@@ -19,6 +19,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Palette.backgroundColor,
       appBar: AppBar(
         iconTheme: const IconThemeData(
           color: Palette.khsilver,
@@ -38,7 +39,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             buildDropdown(
-              '완료 알림',
+              '완료 알림   ',
               _completedNotification,
               (int? newValue) {
                 setState(() {
@@ -87,6 +88,9 @@ class _AlarmScreenState extends State<AlarmScreen> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
         Text(title, style: TextStyle(fontSize: 18)),
+        SizedBox(
+          width: 100,
+        ),
         DropdownButton<int>(
           value: currentValue,
           items: notificationOptions.map((int value) {
@@ -97,6 +101,12 @@ class _AlarmScreenState extends State<AlarmScreen> {
           }).toList(),
           onChanged: onChanged,
         ),
+        Text(
+          '분 전',
+          style: TextStyle(
+            fontSize: 18,
+          ),
+        )
       ],
     );
   }

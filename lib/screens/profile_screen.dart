@@ -1,19 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:apptest/config/palette.dart';
 import 'package:apptest/screens/alarm_screen.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:apptest/screens/login_screen.dart';
+import '../users.dart';
 
 
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({super.key});
+  final username;
+  const ProfileScreen({super.key, required this.username,});
 
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-   @override
+  final box = Hive.box<User>('user_info1');
+    
+  User userdetect(String user_name) {
+    return box.values.firstWhere((user) => user.name == user_name);
+  }
+
+  @override
   Widget build(BuildContext context) {
+    User user_now = userdetect(widget.username);
     return Scaffold(
+      backgroundColor: Palette.backgroundColor,
       appBar: AppBar(
         iconTheme: const IconThemeData(
           color: Palette.khsilver,
@@ -40,7 +52,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   height: 200,
                   padding: EdgeInsets.all(16.0),
                   color: Colors.grey[300],
-                  child: const Column(
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
@@ -50,23 +62,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         size: 50,
                       ),
                       Text(
+                        widget.username,
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                         ),
-                        '김철수',
                       ),
                       Text(
+                        '${user_now.floor.toString()} 층',
                         style: TextStyle(
                           fontSize: 18,
                         ),
-                        'B동 3층'
                       ),
                       Text(
+                        '1학년',
                         style: TextStyle(
                           fontSize: 18,
                         ),
-                        '1학년'
                       ),
                     ],
                   ),
@@ -105,6 +117,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   child: Text(
                     style: TextStyle(
                       fontSize: 18,
+                      color: Palette.khblue
                     ),
                     '알림 설정'
                   ),
@@ -138,11 +151,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                   '비밀번호 변경'
                 ),
-                Text(
-                  style: TextStyle(
-                    fontSize: 18,
+                TextButton(
+                  child: Text(
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Palette.khblue
+                    ),
+                    '로그아웃',
                   ),
-                  '로그아웃'
+                  onPressed: (){
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => LoginScreen()));
+                  },
                 ),
                 Text(
                   style: TextStyle(

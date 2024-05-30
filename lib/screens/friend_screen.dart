@@ -1,32 +1,45 @@
-import 'package:apptest/config/palette.dart';
+import '../config/palette.dart';
 import 'package:flutter/material.dart';
-import 'package:apptest/screens/home_screen.dart';
-import 'package:apptest/screens/chat_screen.dart';
-import 'package:apptest/screens/addfriend_screen.dart';
+import './home_screen.dart';
+import './chat_screen.dart';
+import './addfriend_screen.dart';
+import 'package:apptest/screens/other_user_screen.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import '../users.dart';
 
 class FriendScreen extends StatefulWidget {
-  final reservated;
-  const FriendScreen({super.key, required this.reservated});
+  final username;
+  FriendScreen({super.key, required this.username});
+  
 
   @override
   State<FriendScreen> createState() => _FriendScreenState();
 }
 
 class _FriendScreenState extends State<FriendScreen> {
+  final box = Hive.box<User>('user_info1');
   
-  final List<Map<String, String>> friends = [
-    {'name': 'Alice', 'profile': 'assets/alice.png'},
-    {'name': 'Bob', 'profile': 'assets/bob.png'},
-    {'name': 'Charlie', 'profile': 'assets/charlie.png'},
-    // Add more friends here
-  ];
+
+  User userdetect(String user_name) {
+    return box.values.firstWhere((user) => user.name == user_name);
+  }
+
+  // final List<Map<String, String>> friends = [
+  //   {'name': 'Alice', 'profile': 'assets/alice.png'},
+  //   {'name': 'Bob', 'profile': 'assets/bob.png'},
+  //   {'name': 'Charlie', 'profile': 'assets/charlie.png'},
+  //   // Add more friends here
+  // ];
+
+  
 
   String searchQuery = '';
 
   @override
   Widget build(BuildContext context) {
-    List<Map<String, String>> filteredFriends = friends
-        .where((friend) => friend['name']!.toLowerCase().contains(searchQuery.toLowerCase()))
+    final List<String> friends = userdetect(widget.username).friends;
+    List<String> filteredFriends = friends
+        .where((friend) => friend!.toLowerCase().contains(searchQuery.toLowerCase()))
         .toList();
 
     return Scaffold(
@@ -75,23 +88,36 @@ class _FriendScreenState extends State<FriendScreen> {
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => AddFriendScreen(reservated: widget.reservated)),
+                          MaterialPageRoute(builder: (context) => AddFriendScreen(username: widget.username)),
                         );
                       },
                     ),
                   ],
                 ),
-                ListView.builder(
-                  itemCount: filteredFriends.length,
-                  itemBuilder: (context, index) {
-                    return ListTile(
-                      leading: Icon(
-                        Icons.account_circle_outlined,
-                      ),
-                      title: Text(filteredFriends[index]['name']!),
-                    );
-                  },
-                  shrinkWrap: true,
+                SizedBox(
+                  height: 315,
+                  child: 
+                  ListView.builder(
+                    itemCount: filteredFriends.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        leading: IconButton(
+                          onPressed: () {
+                            String target_user = filteredFriends[index];
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => OtherUserScreen(target_user: target_user, username: widget.username,),
+                              ),
+                            );
+                          },
+                          icon: Icon(Icons.account_circle_outlined),
+                        ),
+                        title: Text(filteredFriends[index]!),
+                      );
+                    },
+                    shrinkWrap: true,
+                  ),
                 ),
               ],
             ),
@@ -114,7 +140,7 @@ class _FriendScreenState extends State<FriendScreen> {
                 ),
                 IconButton(
                   onPressed: (){
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreen(floor: 3, waitings: 2, reservated: widget.reservated)));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreen(username: widget.username)));
                   },
                   icon: const Icon(
                     Icons.local_laundry_service,
@@ -124,7 +150,7 @@ class _FriendScreenState extends State<FriendScreen> {
                 ),
                 IconButton(
                   onPressed: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => ChatScreen(reservated: widget.reservated)));
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => ChatScreen(username: widget.username)));
                   },
                   icon: const Icon(
                     Icons.chat,

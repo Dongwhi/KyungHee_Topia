@@ -4,23 +4,50 @@ import 'package:apptest/screens/friend_screen.dart'; // 이동하게될 수 있�
 import 'package:apptest/screens/chat_screen.dart'; // 이동하게될 수 있는 페이지들
 import 'package:apptest/screens/profile_screen.dart'; // 이동하게될 수 있는 페이지들
 import 'package:apptest/screens/reservation_screen.dart'; // 이동하게될 수 있는 페이지들
+import 'package:hive_flutter/hive_flutter.dart';
+import '../users.dart';
 
 // 세탁기 현황 페이지
 
 class HomeScreen extends StatefulWidget { // StatefulWidget: 실시간으로 바뀔 수 있는 위젯.
-  int floor; // 정수형 변수 floor을 받기 위해 선언
-  final waitings; // 상수 waitings를 받기 위해 선언
-  final reservated; // 상수 reservated를 받기 위해 선언
-  HomeScreen({super.key, required this.floor, required this.waitings, required this.reservated}); // HomeScreen 위젯이 실행될 때 받는 변수들 지정. required는 꼭 넘겨받아야 함.
+  // int floor; // 정수형 변수 floor을 받기 위해 선언
+  // final waitings; // 상수 waitings를 받기 위해 선언
+  // final reservated; // 상수 reservated를 받기 위해 선언
+  // HomeScreen({super.key, required this.floor, required this.waitings, required this.reservated}); // HomeScreen 위젯이 실행될 때 받는 변수들 지정. required는 꼭 넘겨받아야 함.
+  final username;
+  HomeScreen({super.key, required this.username});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState(); // HomeScreen의 State들 실행
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final box = Hive.box<User>('user_info1');
+  final boxwaiting = Hive.box('waiting_info');
+  int floor = 1;
+  User userdetect(String user_name) {
+    return box.values.firstWhere((user) => user.name == user_name);
+  }
+  bool getreservated(User user) {
+    int res = user.reservated[0];
+    if (res==0) {
+      return false;
+    }
+    else {
+      return true;
+    }
+  }
+  int getfloor(User user) {
+    return user.floor;
+  }
+  
+  
 
   @override
   Widget build(BuildContext context) {
+    User user_now = userdetect(widget.username);
+    String username_now = widget.username;
+    bool reservated = getreservated(user_now);
     return Scaffold( // Scaffold 위젯으로 모두 감쌈
       backgroundColor: Palette.backgroundColor, // Scaffold 위젯의 배경 색 설정
       appBar: AppBar( // Scaffold 위젯은 appBar을 가질 수 있음. appBar로 AppBar 위젯 사용
@@ -83,10 +110,10 @@ class _HomeScreenState extends State<HomeScreen> {
                           ],
                           onChanged: (int? value){ // DropdownButton에서 value가 바뀌면 floor 변수를 value로 바꿈.
                             setState(() {
-                              widget.floor = value!;
+                              floor = value!;
                             });
                           },
-                          value: widget.floor, // DropdownButton가 표시하는 현재 선택된 value를 바뀐 value로 만들어줌.
+                          value: floor, // DropdownButton가 표시하는 현재 선택된 value를 바뀐 value로 만들어줌.
                         ),
                         ),
                       IconButton( // 층 선택 옆에 표시할 프로필 아이콘, Row에 들어갈 두 번째 위젯.
@@ -94,7 +121,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           Navigator.push( // 다른 화면으로 이동하기.
                             context,
                             MaterialPageRoute(
-                              builder: (context) => ProfileScreen(), // ProfileScreen으로 이동함.
+                              builder: (context) => ProfileScreen(username: widget.username), // ProfileScreen으로 이동함.
                             ),
                           );
                         },
@@ -107,25 +134,38 @@ class _HomeScreenState extends State<HomeScreen> {
                     ],
                   ),
                 ),
-                if (widget.reservated) // 만약 예약을 한 상태라면 아래의 Text 위젯을 띄움.
+                if (reservated) // 만약 예약을 한 상태라면 아래의 Text 위젯을 띄움.
                   Text(
                     '내 예약',
                     style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                   ),
-                if (widget.reservated)
+                if (reservated)
                   SizedBox(height: 10), // SizedBox 위젯은 공간을 남겨두기 위한 빈 박스임.
-                if (widget.reservated) // 예약 한 상태일 때 뜨는 세탁기와 건조기 아이콘들을 Row로 묶었음.
-                  Row(
+                if (reservated) // 예약 한 상태일 때 뜨는 세탁기와 건조기 아이콘들을 Row로 묶었음.
+                  Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Icon(
-                        Icons.local_laundry_service,
-                        size: 40,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Text(
+                            '세탁기: ${user_now.reservated[1]} 층 ${user_now.reservated[2]} 번',
+                            style: TextStyle(fontSize: 20,),
+                          ),
+                          Text(
+                            '건조기: ${user_now.reservated[3]} 층 ${user_now.reservated[4]} 번',
+                            style: TextStyle(fontSize: 20,),
+                          ),
+                        ],
                       ),
-                      Icon(
-                        Icons.dry_cleaning,
-                        size: 40,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          reservated_display_machine(context, user_now.reservated[2]-1, user_now.reservated[1], username_now), // 예약한 세탁기
+                          reservated_display_machine(context, user_now.reservated[4]-1, user_now.reservated[3], username_now), // 예약한 건조기
+                        ],
                       ),
+                      
                     ],
                   ),
                 Text( // 세탁기 텍스트 띄우기.
@@ -135,19 +175,42 @@ class _HomeScreenState extends State<HomeScreen> {
                 SizedBox(height: 10),
                 Row( // 세탁기 아이콘들 띄우기.
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: List.generate(3, (index) {
-                    return IconButton(
-                      icon: Icon(Icons.local_laundry_service, size: 40),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ReservationScreen(waitings: widget.waitings, reservated: widget.reservated),
+                  children: 
+                  // List.generate(3, (index) {
+                  //   return IconButton(
+                  //     icon: Icon(Icons.local_laundry_service, size: 40),
+                  //     onPressed: () {
+                  //       Navigator.push(
+                  //         context,
+                  //         MaterialPageRoute(
+                  //           builder: (context) => ReservationScreen(waitings: widget.waitings, reservated: widget.reservated),
+                  //         ),
+                  //       );
+                  //     },
+                  //   );
+                  // }),
+                  [
+                    Stack( // 첫 번째 세탁기
+                      alignment: Alignment.center,
+                      children: [
+                        InkWell(
+                          child: Container(
+                            child: Image.asset(
+                              "assets/icons/machine.jpg",
+                              width:50,
+                              height:50,
+                              ),
                           ),
-                        );
-                      },
-                    );
-                  }),
+                          onTap: () {
+                            showPopup(context, '알림', '해당 세탁기는 예약 불가능한 세탁기입니다.');
+                          },
+                        ),
+                        Text(boxwaiting.get(floor)[0].toString())
+                      ],
+                    ),
+                    display_machine(context, 1, floor, username_now), // 두 번째 세탁기
+                    display_machine(context, 2, floor, username_now), // 세 번째 세탁기
+                  ],
                 ),
                 SizedBox(height: 30), // 빈 공간 만들기.
                 Text( // 건조기 텍스트 띄우기.
@@ -157,19 +220,39 @@ class _HomeScreenState extends State<HomeScreen> {
                 SizedBox(height: 10),
                 Row( // 건조기 아이콘들 띄우기.
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: List.generate(2, (index) {
-                    return IconButton(
-                      icon: Icon(Icons.dry_cleaning, size: 40),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ReservationScreen(waitings: widget.waitings, reservated: widget.reservated),
+                  children: 
+                  // List.generate(2, (index) {
+                  //   return IconButton(
+                  //     icon: Icon(Icons.dry_cleaning, size: 40),
+                  //     onPressed: () {
+                  //       Navigator.push(
+                  //         context,
+                  //         MaterialPageRoute(
+                  //           builder: (context) => ReservationScreen(waitings: widget.waitings, reservated: widget.reservated),
+                  //         ),
+                  //       );
+                  //     },
+                  //   );
+                  // }),
+                  [
+                    Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        InkWell(
+                          onTap: () {
+                            showPopup(context, '알림', '해당 건조기는 예약 불가능한 세탁기입니다.');
+                          },
+                          child: Image.asset(
+                            "assets/icons/machine.jpg",
+                            width:50,
+                            height:50,
+                            ),
                           ),
-                        );
-                      },
-                    );
-                  }),
+                        Text(boxwaiting.get(floor)[3].toString())
+                      ],
+                    ),
+                    display_machine(context, 4, floor, username_now), // 다섯 번째 건조기
+                  ],
                 ),
               ],
             ),
@@ -182,7 +265,7 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [ // Row 위젯 안에 들어갈 위젯들 설정.
                 IconButton( // 친구 화면용 아이콘.
                   onPressed: (){ // 눌렸을 때의 동작 정의.
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => FriendScreen(reservated: widget.reservated))); // FriendScreen로 이동.
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => FriendScreen(username: widget.username))); // FriendScreen로 이동.
                   },
                   icon: const Icon(
                     Icons.people,
@@ -202,7 +285,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 IconButton( // 채팅 화면용 아이콘
                   onPressed: (){
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => ChatScreen(reservated: widget.reservated,)));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => ChatScreen(username: widget.username)));
                   },
                   icon: const Icon(
                     Icons.chat,
@@ -216,5 +299,108 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
     );
+  }
+}
+
+void showPopup(BuildContext context, String title, String message) { // 팝업 함수
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text(title),
+        content: Text(message),
+        actions: <Widget>[
+          TextButton(
+            child: Text("OK"),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
+
+Stack display_machine(BuildContext context, int machine_index, int floor_now, String username_now){
+  final boxwaiting = Hive.box('waiting_info');
+  int time = boxwaiting.get(floor_now)[machine_index];
+  String image_location = 'assets/icons/machine.jpg';
+  if (time>=100){
+    image_location = 'assets/icons/machine_red.jpg';
+  } else if (time >= 50){
+    image_location = 'assets/icons/machine_orenge.jpg';
+  } else{
+    image_location = 'assets/icons/machine_green.jpg';
+  }
+  return Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        InkWell(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ReservationScreen(username: username_now, machinenum: machine_index+1, floor: floor_now,),
+                              ),
+                            );
+                          },
+                          child: Image.asset(
+                            image_location,
+                            width:50,
+                            height:50,
+                            ),
+                          ),
+                        Text(boxwaiting.get(floor_now)[machine_index].toString())
+                      ],
+                    );
+}
+
+Stack reservated_display_machine(BuildContext context, int machine_index, int floor_reserve, String username_now){
+  final boxwaiting = Hive.box('waiting_info');
+  if (floor_reserve==0){
+    return Stack(
+      children: [
+        Image.asset(
+          'assets/icons/machine.jpg',
+          width:50,
+          height:50,
+        ),
+      ],
+    );
+  } else{
+    int time = boxwaiting.get(floor_reserve)[machine_index] - 50;
+    if (time<0){
+      time = 0;
+    }
+    String image_location = 'assets/icons/machine.jpg';
+    if (time>=100){
+      image_location = 'assets/icons/machine_red.jpg';
+    } else if (time >= 50){
+      image_location = 'assets/icons/machine_orenge.jpg';
+    } else{
+      image_location = 'assets/icons/machine_green.jpg';
+    }
+    return Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ReservationScreen(username: username_now, machinenum: machine_index+1, floor: floor_reserve,),
+                                ),
+                              );
+                            },
+                            child: Image.asset(
+                              image_location,
+                              width:50,
+                              height:50,
+                              ),
+                            ),
+                          Text(time.toString())
+                        ],
+                      );
   }
 }

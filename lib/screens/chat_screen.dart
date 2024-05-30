@@ -3,30 +3,39 @@ import 'package:flutter/material.dart';
 import 'package:apptest/screens/home_screen.dart';
 import 'package:apptest/screens/friend_screen.dart';
 import 'package:apptest/screens/addchat_screen.dart';
+import 'package:apptest/screens/chatting_screen.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import '../users.dart';
 
 class ChatScreen extends StatefulWidget {
-  final reservated;
-  const ChatScreen({super.key, required this.reservated});
+  final username;
+  ChatScreen({super.key, required this.username});
 
   @override
   State<ChatScreen> createState() => ChatScreenState();
 }
 
 class ChatScreenState extends State<ChatScreen> {
+  final box = Hive.box<User>('user_info1');
 
-  final List<Map<String, String>> chats = [
-    {'name': '3층', 'peoples': '52'},
-    {'name': '302호', 'peoples': '3'},
-    {'name': '동아리', 'peoples': '8'},
-    // Add more friends here
-  ];
+  User userdetect(String user_name) {
+    return box.values.firstWhere((user) => user.name == user_name);
+  }
+
+  // final List<Map<String, String>> chats = [
+  //   {'name': '3층', 'peoples': '52'},
+  //   {'name': '302호', 'peoples': '3'},
+  //   {'name': '동아리', 'peoples': '8'},
+  // ];
+
 
   String searchQuery = '';
 
   @override
   Widget build(BuildContext context) {
-    List<Map<String, String>> filteredChats = chats
-        .where((chats) => chats['name']!.toLowerCase().contains(searchQuery.toLowerCase()))
+    final List<String> chats = userdetect(widget.username).chatlist;
+    List<String> filteredchats = chats
+        .where((chats) => chats.toLowerCase().contains(searchQuery.toLowerCase()))
         .toList();
 
     return Scaffold(
@@ -75,23 +84,37 @@ class ChatScreenState extends State<ChatScreen> {
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => AddChatScreen(reservated: widget.reservated)),
+                          MaterialPageRoute(builder: (context) => AddChatScreen(username: widget.username)),
                         );
                       },
                     ),
                   ],
                 ),
-                ListView.builder(
-                  itemCount: filteredChats.length,
-                  itemBuilder: (context, index) {
-                    return ListTile(
-                      leading: Icon(
-                        Icons.chat,
-                      ),
-                      title: Text(filteredChats[index]['name']!),
-                    );
-                  },
-                  shrinkWrap: true,
+                SizedBox(
+                  height: 315,
+                  child: 
+                  ListView.builder(
+                    itemCount: filteredchats.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        leading: IconButton(
+                          onPressed: (){
+                            String target_chat = filteredchats[index];
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ChattingScreen(chatting_name: target_chat, username: widget.username,),
+                              ),
+                            );
+                          },
+                          icon: Icon(Icons.chat),
+                          //icon: Image.asset('assets/icons/chat.jpg'),
+                        ),
+                        title: Text(filteredchats[index]),
+                      );
+                    },
+                    shrinkWrap: true,
+                  ),
                 ),
               ],
             ),
@@ -104,7 +127,7 @@ class ChatScreenState extends State<ChatScreen> {
               children: [
                 IconButton(
                   onPressed: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => FriendScreen(reservated: widget.reservated)));
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => FriendScreen(username: widget.username)));
                   },
                   icon: const Icon(
                     Icons.people,
@@ -114,7 +137,7 @@ class ChatScreenState extends State<ChatScreen> {
                 ),
                 IconButton(
                   onPressed: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreen(floor: 3, waitings: 2, reservated: widget.reservated)));
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreen(username: widget.username)));
                   },
                   icon: const Icon(
                     Icons.local_laundry_service,

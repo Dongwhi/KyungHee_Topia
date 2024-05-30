@@ -16,6 +16,7 @@ class _CerificationScreenState extends State<CerificationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Palette.backgroundColor,
       appBar: AppBar(
         iconTheme: const IconThemeData(
           color: Palette.khsilver,
@@ -85,10 +86,10 @@ class _CerificationScreenState extends State<CerificationScreen> {
                 print('Phone Number: $phoneNumber');
                 print('Verification Code: $verificationCode');
 
-                // Navigate to SigninScreen
+                // Navigate to SignupScreen
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => SignupScreen()),
+                  MaterialPageRoute(builder: (context) => SignupScreen(name: name)),
                 );
               },
               child: Text('Verify'),

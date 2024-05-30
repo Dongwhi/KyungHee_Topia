@@ -1,23 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:apptest/config/palette.dart';
 import 'package:apptest/screens/login_screen.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import '../users.dart';
 
 class SignupScreen extends StatefulWidget {
-  const SignupScreen({super.key});
+  String name;
+  SignupScreen({super.key, required this.name});
 
   @override
   _SignupScreenState createState() => _SignupScreenState();
 }
 
 class _SignupScreenState extends State<SignupScreen> {
+  var box = Hive.box<User>('user_info1');
   final _nicknameController = TextEditingController();
   final _idController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
+  final _floorController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Palette.backgroundColor,
       appBar: AppBar(
         iconTheme: const IconThemeData(
           color: Palette.khsilver,
@@ -59,6 +65,12 @@ class _SignupScreenState extends State<SignupScreen> {
                 labelText: 'Confirm Password',
               ),
             ),
+            TextField(
+              controller: _floorController,
+              decoration: InputDecoration(
+                labelText: 'Floor',
+              ),
+            ),
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
@@ -67,11 +79,15 @@ class _SignupScreenState extends State<SignupScreen> {
                 String id = _idController.text;
                 String password = _passwordController.text;
                 String confirmPassword = _confirmPasswordController.text;
+                int floor = int.parse(_floorController.text);
 
                 if (password == confirmPassword) {
                   print('Nickname: $nickname');
                   print('ID: $id');
                   print('Password: $password');
+
+                  //box.add(User(widget.name, nickname, id, password, floor, false, [0, 0, 0, 0], 0, List.empty(growable : true)));  // put()은 key값이 인덱스로 자동 설정됨.
+                  box.put(widget.name, User(widget.name, nickname, id, password, floor, false, [0, 0, 0, 0], 0, List.empty(growable : true), ['$floor층 채팅방']));
 
                   // Navigate to HomeScreen
                   Navigator.push(
