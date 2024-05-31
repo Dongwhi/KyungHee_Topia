@@ -79,12 +79,18 @@ class _SignupScreenState extends State<SignupScreen> {
                 String id = _idController.text;
                 String password = _passwordController.text;
                 String confirmPassword = _confirmPasswordController.text;
-                int floor = int.parse(_floorController.text);
+                bool floorErrorCheck = false;
+                int floor = 0;
+                try {
+                  int floor = int.parse(_floorController.text);
+                } on FormatException{
+                  floorErrorCheck = true;
+                }
 
-                if (nickname == "" || id == "" || password== "" || confirmPassword == "") {
+                if (nickname == "" || id == "" || password== "" || confirmPassword == "" || floorErrorCheck) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text('입력하지 않은 칸이 있습니다!'),
+                      content: Text('비어 있거나 잘못 입력한 칸이 있습니다!'),
                     ),
                   );
                 }
@@ -94,7 +100,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   print('Password: $password');
 
                   //box.add(User(widget.name, nickname, id, password, floor, false, [0, 0, 0, 0], 0, List.empty(growable : true)));  // put()은 key값이 인덱스로 자동 설정됨.
-                  box.put(widget.name, User(widget.name, nickname, id, password, floor, false, [0, 0, 0, 0], 0, List.empty(growable : true), ['$floor층 채팅방']));
+                  box.put(widget.name, User(widget.name, nickname, id, password, floor, false, [0, 0, 0, 0], 0, List.empty(growable : true), ['${floor}층 채팅방']));
 
                   // Navigate to HomeScreen
                   Navigator.push(
