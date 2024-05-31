@@ -82,7 +82,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 bool floorErrorCheck = false;
                 int floor = 0;
                 try {
-                  int floor = int.parse(_floorController.text);
+                  floor = int.parse(_floorController.text);
                 } on FormatException{
                   floorErrorCheck = true;
                 }
