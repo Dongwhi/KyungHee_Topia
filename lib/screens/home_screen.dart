@@ -56,7 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         backgroundColor: Palette.khblue, // AppBar 위젯의 배경 색 설정
         title: const Text( // AppBar 위젯 안에 들어갈 title 설정
-          'Laundry', // Laundry가 나오게 함
+          '세탁기 현황', // 상단바 제목 내용
           style: TextStyle( // title 텍스트 스타일 설정
             color: Colors.white, // 텍스트 색 하얀색으로 설정
             fontWeight: FontWeight.bold, // 볼드체로 설정

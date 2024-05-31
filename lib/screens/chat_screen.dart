@@ -46,7 +46,7 @@ class ChatScreenState extends State<ChatScreen> {
         ),
         backgroundColor: Palette.khblue,
         title: const Text(
-          'Chat',
+          '채팅방',
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,

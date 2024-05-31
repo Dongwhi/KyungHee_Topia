@@ -50,7 +50,7 @@ class _FriendScreenState extends State<FriendScreen> {
         ),
         backgroundColor: Palette.khblue,
         title: const Text(
-          'Friend',
+          '친구',
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
