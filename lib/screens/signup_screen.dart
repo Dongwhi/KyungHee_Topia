@@ -87,7 +87,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   floorErrorCheck = true;
                 }
 
-                if (nickname == "" || id == "" || password== "" || confirmPassword == "" || floorErrorCheck) {
+                if (nickname == "" || id == "" || password== "" || confirmPassword == "" || floorErrorCheck || !(floor >= 1 && floor <= 3)) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text('비어 있거나 잘못 입력한 칸이 있습니다!'),
