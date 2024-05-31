@@ -61,8 +61,9 @@ class OtherUserScreenState extends State<OtherUserScreen> {
                   MaterialPageRoute(builder: (context) => ChatScreen(username: user_now.name))
                 );
               },
-              child: Text(
-                '1:1 대화'
+              child: const Text(
+                '1:1 대화',
+                style: TextStyle(color: Palette.activeColor)
               ),
             ),
           if (!friends.contains(widget.target_user))
@@ -74,8 +75,9 @@ class OtherUserScreenState extends State<OtherUserScreen> {
                   box = Hive.box<User>('userinfo');
                 };
               },
-              child: Text(
-                '친구추가'
+              child: const Text(
+                '친구추가',
+                style: TextStyle(color: Palette.activeColor)
               ),
             ),
 

@@ -123,6 +123,7 @@ class _AlarmScreenState extends State<AlarmScreen> {
               value: value,
               groupValue: currentValue,
               onChanged: onChanged,
+              activeColor: Palette.activeColor,
             );
           }).toList(),
         ),
