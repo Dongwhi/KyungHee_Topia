@@ -81,7 +81,14 @@ class _SignupScreenState extends State<SignupScreen> {
                 String confirmPassword = _confirmPasswordController.text;
                 int floor = int.parse(_floorController.text);
 
-                if (password == confirmPassword) {
+                if (nickname == "" || id == "" || password== "" || confirmPassword == "") {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('입력하지 않은 칸이 있습니다!'),
+                    ),
+                  );
+                }
+                else if (password == confirmPassword) {
                   print('Nickname: $nickname');
                   print('ID: $id');
                   print('Password: $password');
