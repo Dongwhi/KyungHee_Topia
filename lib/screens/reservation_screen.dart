@@ -114,17 +114,32 @@ class ReservationScreenState extends State<ReservationScreen> {
                   // 대기열 등록 로직 추가
                     int floor_now = widget.floor;
                     List<int> timelist = boxwaiting.get(floor_now);
-                    userdetect(widget.username).reservated[0] = 1;
+                    List<int> newreservation = userdetect(widget.username).reservated;
+
+                    // userdetect(widget.username).reservated[0] = 1;
+                    // if (widget.machinenum == 2 || widget.machinenum == 3){
+                    //   userdetect(widget.username).reservated[1] = widget.floor;
+                    //   userdetect(widget.username).reservated[2] = widget.machinenum;
+                    //   timelist[widget.machinenum-1] = timelist[widget.machinenum-1] + 50;
+                    // } else{
+                    //   userdetect(widget.username).reservated[3] = widget.floor;
+                    //   userdetect(widget.username).reservated[4] = widget.machinenum;
+                    //   timelist[widget.machinenum-1] = timelist[widget.machinenum-1] + 50;
+                    // }
+                    // boxwaiting.put(widget.floor, timelist);
+
+                    newreservation[0] = 1;  
                     if (widget.machinenum == 2 || widget.machinenum == 3){
-                      userdetect(widget.username).reservated[1] = widget.floor;
-                      userdetect(widget.username).reservated[2] = widget.machinenum;
+                      newreservation[1] = widget.floor;
+                      newreservation[2] = widget.machinenum;
                       timelist[widget.machinenum-1] = timelist[widget.machinenum-1] + 50;
                     } else{
-                      userdetect(widget.username).reservated[3] = widget.floor;
-                      userdetect(widget.username).reservated[4] = widget.machinenum;
+                      newreservation[3] = widget.floor;
+                      newreservation[4] = widget.machinenum;
                       timelist[widget.machinenum-1] = timelist[widget.machinenum-1] + 50;
                     }
                     boxwaiting.put(widget.floor, timelist);
+                    box.put(widget.username, User(widget.username, user_now.nickname, user_now.id, user_now.password, user_now.floor, user_now.nextlogin, newreservation, user_now.warning, user_now.friends, user_now.chatlist));
                   _showDialog('', '결제를 진행하시겠습니까?');
                 },
               ),
