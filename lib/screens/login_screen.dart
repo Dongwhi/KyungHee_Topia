@@ -18,10 +18,17 @@ class LoginScreenState extends State<LoginScreen> {
 
   final _idController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _firstfloorController = TextEditingController();
+  final _secondfloorController = TextEditingController();
+  final _thirdfloorController = TextEditingController();
   bool _nextLogin = false;
   
   //final box = Hive.box<User>('user_info');
   final box = Hive.box<User>('user_info1');
+  final boxwaiting = Hive.box('waiting_info');
+  final boxchatting = Hive.box('chatting_info');
+
+  bool isChecked = false;
 
   bool isValidUser(String idinput, String passwordinput) {
     return box.values.any((user) => user.id == idinput && user.password == passwordinput); // values(): 모든 키값에 대한 value(User 객체) 리스트를 반환. any(): 리스트에 조건을 만족하는 요소가 있는지 검사
@@ -125,6 +132,47 @@ class LoginScreenState extends State<LoginScreen> {
                     //obscureText: true, // 입력한거 안보이게 하는 코드
                   ),
                   const SizedBox(height: 16),
+                  Row(
+                    children: [
+                      Checkbox(
+                        value: isChecked,
+                        onChanged: (value){
+                          setState(() {
+                            isChecked = value!;  
+                          });
+                        },
+                      ),
+                      Text('유저 정보, 세탁기 시간, 채팅방 초기화')
+                    ],
+                  ),
+
+
+                  // TextField(
+                  //   controller: _firstfloorController,
+                  //   decoration: const InputDecoration(
+                  //     labelText: 'floor 1',
+                  //   ),
+                  //   //obscureText: true, // 입력한거 안보이게 하는 코드
+                  // ),
+                  // const SizedBox(height: 16),
+                  // TextField(
+                  //   controller: _secondfloorController,
+                  //   decoration: const InputDecoration(
+                  //     labelText: 'floor 2',
+                  //   ),
+                  //   //obscureText: true, // 입력한거 안보이게 하는 코드
+                  // ),
+                  // const SizedBox(height: 16),
+                  // TextField(
+                  //   controller: _thirdfloorController,
+                  //   decoration: const InputDecoration(
+                  //     labelText: 'floor 3',
+                  //   ),
+                  //   //obscureText: true, // 입력한거 안보이게 하는 코드
+                  // ),
+                  // const SizedBox(height: 16),
+
+
                   // Buttons
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -153,6 +201,50 @@ class LoginScreenState extends State<LoginScreen> {
                           //   ),
                         ),
                         onPressed: () {
+                          // 핸도폰용 유저, 세탁기 시간, 채팅창 수동으로 넣는 기능
+                          // List<String> times_string = _firstfloorController.text.split(' ').toList();
+                          // List<int> times_int = [0, 0, 0, 0, 0];
+                          // for (int i = 0; i < 5; i++){
+                          //   times_int[i] = int.parse(times_string[i]);
+                          // }
+                          // boxwaiting.put(1, times_int);
+
+                          // times_string = _secondfloorController.text.split(' ').toList();
+                          // for (int i = 0; i < 5; i++){
+                          //   times_int[i] = int.parse(times_string[i]);
+                          // }
+                          // boxwaiting.put(2, times_int);
+
+                          // times_string = _thirdfloorController.text.split(' ').toList();
+                          // for (int i = 0; i < 5; i++){
+                          //   times_int[i] = int.parse(times_string[i]);
+                          // }
+                          // boxwaiting.put(3, times_int);
+                          // boxwaiting.put(1, [33, 0, 0, 0, 12]);
+                          // boxwaiting.put(2, [0, 32, 120, 25, 84]);
+                          // boxwaiting.put(3, [47, 25, 78, 47, 0]);
+                          if (isChecked){
+                            box.put('John Doe', User('John Doe', 'Johnny', 'john_doe_001', 'pass1234', 2, false, [0, 0, 0, 0, 0], 0, 
+                            ['Jane Smith', 'Michael Brown', 'Emily Davis', 'Robert Wilson', 'Lisa Taylor', 'David Johnson', 'Amy Clark', 'Chris White'], ['2층 채팅방']));
+                            box.put('Jane Smith', User('Jane Smith', 'Janie', 'jane_smith_002', 'pass5678', 2, false, [0, 0, 0, 0, 0], 0, [], ['2층 채팅방']));
+                            box.put('Michael Brown', User('Michael Brown', 'Mike', 'michael_brown_003', 'password9876', 1, false, [0, 0, 0, 0, 0], 0, [], ['1층 채팅방']));
+                            box.put('Emily Davis', User('Emily Davis', 'Em', 'emily_davis_004', 'pass4321', 3, false, [0, 0, 0, 0, 0], 0, [], ['3층 채팅방']));
+                            box.put('Robert Wilson', User('Robert Wilson', 'Rob', 'robert_wilson_005', 'pass8765', 3, false, [0, 0, 0, 0, 0], 0, [], ['3층 채팅방']));
+                            box.put('Lisa Taylor', User('Lisa Taylor', 'Liza', 'lisa_taylor_006', 'password5432', 3, false, [0, 0, 0, 0, 0], 0, [], ['3층 채팅방']));
+                            box.put('David Johnson', User('David Johnson', 'Dave', 'david_johnson_007', 'pass2345', 3, false, [0, 0, 0, 0, 0], 0, [], ['3층 채팅방']));
+                            box.put('Amy Clark', User('Amy Clark', 'Ames', 'amy_clark_008', 'pass6789', 1, false, [0, 0, 0, 0, 0], 0, [], ['1층 채팅방']));
+                            box.put('Chris White', User('Chris White', 'Chris', 'chris_white_009', 'pass0987', 1, false, [0, 0, 0, 0, 0], 0, [], ['1층 채팅방']));
+                            box.put('Karen Harris', User('Karen Harris', 'Kari', 'karen_harris_010', 'pass7654', 2, false, [0, 0, 0, 0, 0], 0, [], ['2층 채팅방']));
+                            boxwaiting.put(1, [33, 0, 0, 0, 12]);
+                            boxwaiting.put(2, [0, 32, 120, 25, 84]);
+                            boxwaiting.put(3, [47, 25, 78, 47, 0]);
+                            boxchatting.put('1층 채팅방', [{'Chris White': 'Hello!'}]);
+                            boxchatting.put('2층 채팅방', [{'Jane Smith': 'Hello!'}, {'Karen Harris':'let\'s go'}]);
+                            boxchatting.put('3층 채팅방', [{'Emily Davis': 'Hello!'}, {'David Johnson':'Hi!'}]);
+                            boxchatting.put('317호', [{'Emily Davis': '빨래 언제할까?'}, {'Robert Wilson':'7시에 하자'}]);
+                          }
+
+
                           // //_login();
                           final id = _idController.text;
                           final password = _passwordController.text;
@@ -199,6 +291,49 @@ class LoginScreenState extends State<LoginScreen> {
                           fixedSize: Size(150, 40),
                         ),
                         onPressed: () {
+                          // 핸도폰용 유저, 세탁기 시간, 채팅창 수동으로 넣는 기능
+                          // List<String> times_string = _firstfloorController.text.split(' ').toList();
+                          // List<int> times_int = [0, 0, 0, 0, 0];
+                          // for (int i = 0; i < 5; i++){
+                          //   times_int[i] = int.parse(times_string[i]);
+                          // }
+                          // boxwaiting.put(1, times_int);
+
+                          // times_string = _secondfloorController.text.split(' ').toList();
+                          // for (int i = 0; i < 5; i++){
+                          //   times_int[i] = int.parse(times_string[i]);
+                          // }
+                          // boxwaiting.put(2, times_int);
+
+                          // times_string = _thirdfloorController.text.split(' ').toList();
+                          // for (int i = 0; i < 5; i++){
+                          //   times_int[i] = int.parse(times_string[i]);
+                          // }
+                          // boxwaiting.put(3, times_int);
+                          // boxwaiting.put(1, [33, 0, 0, 0, 12]);
+                          // boxwaiting.put(2, [0, 32, 120, 25, 84]);
+                          // boxwaiting.put(3, [47, 25, 78, 47, 0]);
+                          if (isChecked){
+                            box.put('John Doe', User('John Doe', 'Johnny', 'john_doe_001', 'pass1234', 2, false, [0, 0, 0, 0, 0], 0, 
+                            ['Jane Smith', 'Michael Brown', 'Emily Davis', 'Robert Wilson', 'Lisa Taylor', 'David Johnson', 'Amy Clark', 'Chris White'], ['2층 채팅방']));
+                            box.put('Jane Smith', User('Jane Smith', 'Janie', 'jane_smith_002', 'pass5678', 2, false, [0, 0, 0, 0, 0], 0, [], ['2층 채팅방']));
+                            box.put('Michael Brown', User('Michael Brown', 'Mike', 'michael_brown_003', 'password9876', 1, false, [0, 0, 0, 0, 0], 0, [], ['1층 채팅방']));
+                            box.put('Emily Davis', User('Emily Davis', 'Em', 'emily_davis_004', 'pass4321', 3, false, [0, 0, 0, 0, 0], 0, [], ['3층 채팅방']));
+                            box.put('Robert Wilson', User('Robert Wilson', 'Rob', 'robert_wilson_005', 'pass8765', 3, false, [0, 0, 0, 0, 0], 0, [], ['3층 채팅방']));
+                            box.put('Lisa Taylor', User('Lisa Taylor', 'Liza', 'lisa_taylor_006', 'password5432', 3, false, [0, 0, 0, 0, 0], 0, [], ['3층 채팅방']));
+                            box.put('David Johnson', User('David Johnson', 'Dave', 'david_johnson_007', 'pass2345', 3, false, [0, 0, 0, 0, 0], 0, [], ['3층 채팅방']));
+                            box.put('Amy Clark', User('Amy Clark', 'Ames', 'amy_clark_008', 'pass6789', 1, false, [0, 0, 0, 0, 0], 0, [], ['1층 채팅방']));
+                            box.put('Chris White', User('Chris White', 'Chris', 'chris_white_009', 'pass0987', 1, false, [0, 0, 0, 0, 0], 0, [], ['1층 채팅방']));
+                            box.put('Karen Harris', User('Karen Harris', 'Kari', 'karen_harris_010', 'pass7654', 2, false, [0, 0, 0, 0, 0], 0, [], ['2층 채팅방']));
+                            boxwaiting.put(1, [33, 0, 0, 0, 12]);
+                            boxwaiting.put(2, [0, 32, 120, 25, 84]);
+                            boxwaiting.put(3, [47, 25, 78, 47, 0]);
+                            boxchatting.put('1층 채팅방', [{'Chris White': 'Hello!'}]);
+                            boxchatting.put('2층 채팅방', [{'Jane Smith': 'Hello!'}, {'Karen Harris':'let\'s go'}]);
+                            boxchatting.put('3층 채팅방', [{'Emily Davis': 'Hello!'}, {'David Johnson':'Hi!'}]);
+                            boxchatting.put('317호', [{'Emily Davis': '빨래 언제할까?'}, {'Robert Wilson':'7시에 하자'}]);
+                          }
+
                           Navigator.push(
                             context,
                             MaterialPageRoute(
