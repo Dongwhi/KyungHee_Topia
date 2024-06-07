@@ -129,7 +129,7 @@ class LoginScreenState extends State<LoginScreen> {
                     decoration: const InputDecoration(
                       labelText: 'Password',
                     ),
-                    //obscureText: true, // 입력한거 안보이게 하는 코드
+                    obscureText: true, // 입력한거 안보이게 하는 코드
                   ),
                   const SizedBox(height: 16),
                   Row(
