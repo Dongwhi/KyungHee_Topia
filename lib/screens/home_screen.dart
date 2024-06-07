@@ -265,7 +265,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             showPopup(context, '알림', '해당 세탁기는 예약 없이 사용하는 공용 세탁기입니다.');
                           },
                         ),
-                        Text(boxwaiting.get(floor)[0].toString())
+                        (boxwaiting.get(floor)[0] >= 60 )? Text((boxwaiting.get(floor)[0] ~/ 60).toString() + "h " + (boxwaiting.get(floor)[0] % 60).toString() + "m") : Text(boxwaiting.get(floor)[0].toString() + "m")
                       ],
                     ),
                     display_machine(context, 1, floor, username_now), // 두 번째 세탁기
@@ -321,7 +321,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             height:100,
                             ),
                           ),
-                        Text(boxwaiting.get(floor)[3].toString())
+                        (boxwaiting.get(floor)[3] >= 60 )? Text((boxwaiting.get(floor)[3] ~/ 60).toString() + "h " + (boxwaiting.get(floor)[3] % 60).toString() + "m") : Text(boxwaiting.get(floor)[3].toString() + "m")
                       ],
                     ),
                     display_machine(context, 4, floor, username_now), // 다섯 번째 건조기
@@ -458,7 +458,7 @@ Stack display_machine(BuildContext context, int machine_index, int floor_now, St
                             height:100,
                             ),
                           ),
-                        Text(boxwaiting.get(floor_now)[machine_index].toString())
+                        (boxwaiting.get(floor_now)[machine_index] >= 60 )? Text((boxwaiting.get(floor_now)[machine_index] ~/ 60).toString() + "h " + (boxwaiting.get(floor_now)[machine_index] % 60).toString() + "m") : Text(boxwaiting.get(floor_now)[machine_index].toString() + "m")
                       ],
                     );
 }
@@ -507,7 +507,7 @@ Stack reservated_display_machine(BuildContext context, int machine_index, int fl
                               height:100,
                               ),
                             ),
-                          Text(time.toString())
+                          (time >= 60 )? Text((time ~/ 60).toString() + "h " + (time % 60).toString() + "m") : Text(time.toString() + "m")
                         ],
                       );
   }
