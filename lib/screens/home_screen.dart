@@ -56,7 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         backgroundColor: Palette.khblue, // AppBar 위젯의 배경 색 설정
         title: const Text( // AppBar 위젯 안에 들어갈 title 설정
-          '세탁기 현황', // 상단바 제목 내용
+          '세탁기 현황', // Laundry가 나오게 함
           style: TextStyle( // title 텍스트 스타일 설정
             color: Colors.white, // 텍스트 색 하얀색으로 설정
             fontWeight: FontWeight.bold, // 볼드체로 설정
@@ -69,7 +69,11 @@ class _HomeScreenState extends State<HomeScreen> {
           Container( // Column 안에 들어갈 첫 위젯을 Container(직사각형 위젯)로 설정. 여기에 들어간 것은 층 선택, 프로필, 내 예약, 세탁기, 건조기임
             color: Palette.backgroundColor, // Contrainer 위젯의 색을 설정.
             child: Column( // Container 안에 들어갈 위젯을 설정. 여기서는 Container 안에 Column을 넣음.
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [ // Column 위젯의 children 안에 Column에 들어갈 위젯들을 담으면 됨.
+                SizedBox(
+                  height: 30,
+                ),
                 Container( // Column 안에 들어갈 첫 위젯을 Container(직사각형 위젯)로 설정.
                   child: Row( // Container 안에 Row 위젯을 넣음. Row 위젯은 안에 여러 위젯이 가로로 나열됨. 여기엔 층 선택, 프로필 두 개가 들어감.
                     mainAxisAlignment: MainAxisAlignment.spaceAround, // 나열 방법 설정.
@@ -134,47 +138,100 @@ class _HomeScreenState extends State<HomeScreen> {
                     ],
                   ),
                 ),
+                SizedBox(
+                  height: 30,
+                ),
                 if (reservated) // 만약 예약을 한 상태라면 아래의 Text 위젯을 띄움.
-                  Text(
-                    '내 예약',
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  Row(
+                    children: [
+                      SizedBox(
+                        width: 30,
+                      ),
+                      Text(
+                        '내 예약',
+                        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                      ),
+                    ],
                   ),
                 if (reservated)
                   SizedBox(height: 10), // SizedBox 위젯은 공간을 남겨두기 위한 빈 박스임.
                 if (reservated) // 예약 한 상태일 때 뜨는 세탁기와 건조기 아이콘들을 Row로 묶었음.
                   Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          Text(
-                            '세탁기: ${user_now.reservated[1]} 층 ${user_now.reservated[2]} 번',
-                            style: TextStyle(fontSize: 20,),
+                          SizedBox(
+                            width: 30,
                           ),
                           Text(
-                            '건조기: ${user_now.reservated[3]} 층 ${user_now.reservated[4]} 번',
+                            '세탁기:',
+                            style: TextStyle(fontSize: 20,),
+                          ),
+                          SizedBox(
+                            width: 130,
+                          ),
+                          Text(
+                            '건조기:',
                             style: TextStyle(fontSize: 20,),
                           ),
                         ],
                       ),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
+                          SizedBox(
+                            width: 30,
+                          ),
+                          Text(
+                            '${user_now.reservated[1]} 층 ${user_now.reservated[2]} 번',
+                            style: TextStyle(fontSize: 20,),
+                          ),
+                          SizedBox(
+                            width: 115,
+                          ),
+                          Text(
+                            '${user_now.reservated[3]} 층 ${user_now.reservated[4]} 번',
+                            style: TextStyle(fontSize: 20,),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            width: 30,
+                          ),
                           reservated_display_machine(context, user_now.reservated[2]-1, user_now.reservated[1], username_now), // 예약한 세탁기
+                          SizedBox(
+                            width: 100,
+                          ),
                           reservated_display_machine(context, user_now.reservated[4]-1, user_now.reservated[3], username_now), // 예약한 건조기
                         ],
                       ),
                       
                     ],
                   ),
-                Text( // 세탁기 텍스트 띄우기.
-                  '세탁기',
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                SizedBox(
+                  width: 30,
                 ),
-                SizedBox(height: 10),
+                Row(
+                  children: [
+                    SizedBox(
+                      width: 30,
+                    ),
+                    Text( // 세탁기 텍스트 띄우기.
+                      '세탁기',
+                      style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+                
+                SizedBox(
+                  height: 20,
+                ),
                 Row( // 세탁기 아이콘들 띄우기.
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: 
                   // List.generate(3, (index) {
                   //   return IconButton(
@@ -190,6 +247,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   //   );
                   // }),
                   [
+                    SizedBox(
+                      width: 30,
+                    ),
                     Stack( // 첫 번째 세탁기
                       alignment: Alignment.center,
                       children: [
@@ -197,12 +257,12 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: Container(
                             child: Image.asset(
                               "assets/icons/machine.jpg",
-                              width:50,
-                              height:50,
+                              width:100,
+                              height:100,
                               ),
                           ),
                           onTap: () {
-                            showPopup(context, '알림', '해당 기기는 예약 없이 이용하는 세탁기이므로 예약이 불가능합니다.');
+                            showPopup(context, '알림', '해당 세탁기는 예약 없이 사용하는 공용 세탁기입니다.');
                           },
                         ),
                         Text(boxwaiting.get(floor)[0].toString())
@@ -213,13 +273,23 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                 ),
                 SizedBox(height: 30), // 빈 공간 만들기.
-                Text( // 건조기 텍스트 띄우기.
-                  '건조기',
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                Row(
+                  children: [
+                    SizedBox(
+                      width: 30,
+                    ),
+                    Text( // 건조기 텍스트 띄우기.
+                      '건조기',
+                      style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                    ),
+                  ],
                 ),
-                SizedBox(height: 10),
+                
+                SizedBox(
+                  height: 20,
+                ),
                 Row( // 건조기 아이콘들 띄우기.
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: 
                   // List.generate(2, (index) {
                   //   return IconButton(
@@ -235,17 +305,20 @@ class _HomeScreenState extends State<HomeScreen> {
                   //   );
                   // }),
                   [
+                    SizedBox(
+                      width: 30,
+                    ),
                     Stack(
                       alignment: Alignment.center,
                       children: [
                         InkWell(
                           onTap: () {
-                            showPopup(context, '알림', '해당 기기는 예약 없이 이용하는 건조기이므로 예약이 불가능합니다.');
+                            showPopup(context, '알림', '해당 건조기는 예약 없이 사용하는 공용 건조기입니다.');
                           },
                           child: Image.asset(
                             "assets/icons/machine.jpg",
-                            width:50,
-                            height:50,
+                            width:100,
+                            height:100,
                             ),
                           ),
                         Text(boxwaiting.get(floor)[3].toString())
@@ -322,6 +395,40 @@ void showPopup(BuildContext context, String title, String message) { // 팝업 �
   );
 }
 
+// void showCanclePopup(BuildContext context, String title, String message, int floor, int machineindex, String username) { // 예약 취소 팝업 함수
+//   var box = Hive.box<User>('user_info1');
+//   var boxwaiting = Hive.box('waiting_info');
+//   User user_now = box.get(username);
+//   showDialog(
+//     context: context,
+//     builder: (BuildContext context) {
+//       return AlertDialog(
+//         title: Text(title),
+//         content: Text(message),
+//         actions: <Widget>[
+//           TextButton(
+//             child: Text("OK"),
+//             onPressed: () {
+//               if (machineindex == 1 || machineindex == 2){
+//                 box.put(username, User(username, user_now.nickname, user_now.id, user_now.password, user_now.floor, user_now.nextlogin, newreservation, user_now.warning, user_now.friends, user_now.chatlist));
+//               } else{
+
+//               }
+//               Navigator.of(context).pop();
+//             },
+//           ),
+//           TextButton(
+//             child: Text("NO"),
+//             onPressed: () {
+//               Navigator.of(context).pop();
+//             },
+//           ),
+//         ],
+//       );
+//     },
+//   );
+// }
+
 Stack display_machine(BuildContext context, int machine_index, int floor_now, String username_now){
   final boxwaiting = Hive.box('waiting_info');
   int time = boxwaiting.get(floor_now)[machine_index];
@@ -347,8 +454,8 @@ Stack display_machine(BuildContext context, int machine_index, int floor_now, St
                           },
                           child: Image.asset(
                             image_location,
-                            width:50,
-                            height:50,
+                            width:100,
+                            height:100,
                             ),
                           ),
                         Text(boxwaiting.get(floor_now)[machine_index].toString())
@@ -363,8 +470,8 @@ Stack reservated_display_machine(BuildContext context, int machine_index, int fl
       children: [
         Image.asset(
           'assets/icons/machine.jpg',
-          width:50,
-          height:50,
+          width:100,
+          height:100,
         ),
       ],
     );
@@ -386,6 +493,7 @@ Stack reservated_display_machine(BuildContext context, int machine_index, int fl
                         children: [
                           InkWell(
                             onTap: () {
+                              //showCanclePopup(context, '예약취소', '예약을 취소하시겠습니까?', floor_reserve, machine_index, username_now);
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -395,8 +503,8 @@ Stack reservated_display_machine(BuildContext context, int machine_index, int fl
                             },
                             child: Image.asset(
                               image_location,
-                              width:50,
-                              height:50,
+                              width:100,
+                              height:100,
                               ),
                             ),
                           Text(time.toString())
