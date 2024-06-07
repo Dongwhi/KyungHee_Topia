@@ -23,6 +23,19 @@ class ReservationScreenState extends State<ReservationScreen> {
   User userdetect(String user_name) {
     return box.values.firstWhere((user) => user.name == user_name);
   }
+  bool getreservated(User user) {
+    int res = user.reservated[0];
+    if (res==0) {
+      return false;
+    }
+    else {
+      return true;
+    }
+  }
+  int getfloor(User user) {
+    return user.floor;
+  }
+
   void _showDialog(String title, String content) { // 팝업 함수
     showDialog(
       context: context,
@@ -50,6 +63,9 @@ class ReservationScreenState extends State<ReservationScreen> {
   @override
   Widget build(BuildContext context) {
     User user_now = userdetect(widget.username);
+    String username_now = widget.username;
+    bool reservated = getreservated(user_now);
+
     int times = boxwaiting.get(widget.floor)[widget.machinenum-1];
     int waiting_count = times ~/ 50 + ((times % 50)==0? 0 : 1);
     if (widget.machinenum == 2 || widget.machinenum == 3){
@@ -97,21 +113,17 @@ class ReservationScreenState extends State<ReservationScreen> {
             const SizedBox(height: 20),
             Center(
               child: ElevatedButton(
-                        child: const Text(
-                          '대기열 등록',
-                          style: TextStyle(
-                            color: Colors.white,
-                          ),
-                        ),
+                        child: ((user_now.reservated[1] == widget.floor) && (user_now.reservated[2] == widget.machinenum) || (user_now.reservated[3] == widget.floor) && (user_now.reservated[4] == widget.machinenum)) ?
+                          Text('대기열 취소', style: TextStyle(color: Colors.white)) : Text('대기열 등록', style: TextStyle(color: Colors.white)),
                         style: ElevatedButton.styleFrom(
                           shape: RoundedRectangleBorder(	//모서리를 둥글게
                             borderRadius: BorderRadius.circular(3)
                           ),
                           backgroundColor: Palette.khblue,
-                          fixedSize: Size(150, 40),
+                          fixedSize: Size(150, 40)
                         ),
                 onPressed: () {
-                  // 대기열 등록 로직 추가
+                  // 대기열 등록 및 취소 로직 추가
                     int floor_now = widget.floor;
                     List<int> timelist = boxwaiting.get(floor_now);
                     List<int> newreservation = userdetect(widget.username).reservated;
