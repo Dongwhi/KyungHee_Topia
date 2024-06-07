@@ -202,7 +202,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                           ),
                           onTap: () {
-                            showPopup(context, '알림', '해당 세탁기는 예약 불가능한 세탁기입니다.');
+                            showPopup(context, '알림', '해당 기기는 예약 없이 이용하는 세탁기이므로 예약이 불가능합니다.');
                           },
                         ),
                         Text(boxwaiting.get(floor)[0].toString())
@@ -240,7 +240,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       children: [
                         InkWell(
                           onTap: () {
-                            showPopup(context, '알림', '해당 건조기는 예약 불가능한 세탁기입니다.');
+                            showPopup(context, '알림', '해당 기기는 예약 없이 이용하는 건조기이므로 예약이 불가능합니다.');
                           },
                           child: Image.asset(
                             "assets/icons/machine.jpg",
