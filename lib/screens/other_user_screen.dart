@@ -25,6 +25,7 @@ class OtherUserScreenState extends State<OtherUserScreen> {
   @override
   Widget build(BuildContext context) {
     User user_now = userdetect(widget.username);
+    User targetuser = userdetect(widget.target_user);
     String username_now = widget.username;
     List<String> friends = user_now.friends;
     return Scaffold(
@@ -45,6 +46,32 @@ class OtherUserScreenState extends State<OtherUserScreen> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              IconButton(
+                onPressed: (){
+                  showrepotPopup(context, '신고하기', '이 유저를 신고하시겠습니까?', targetuser, username_now);
+                },
+                icon: Image.asset(
+                  'assets/icons/repot.png',
+                  width: 50,
+                  height: 50,
+                  ),
+              ),
+              TextButton(
+                onPressed: (){
+                  showrepotPopup(context, '신고하기', '이 유저를 신고하시겠습니까?', targetuser, username_now);
+                },
+                child: Text(
+                  '신고하기',
+                  style: TextStyle(
+                    color: Palette.khred,
+                  ),
+                ),
+              ),
+            ],
+          ),
           Image.asset(
             'assets/icons/profile.jpg',
             height: 200,
@@ -54,18 +81,38 @@ class OtherUserScreenState extends State<OtherUserScreen> {
           
 
           if (friends.contains(widget.target_user))
-            ElevatedButton(
-              onPressed: (){
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => ChatScreen(username: user_now.name))
-                );
-              },
-              child: const Text(
-                '1:1 대화',
-                style: TextStyle(color: Palette.activeColor)
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                ElevatedButton(
+                  onPressed: (){
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => ChatScreen(username: user_now.name))
+                    );
+                  },
+                  child: const Text(
+                    '1:1 대화',
+                    style: TextStyle(color: Palette.activeColor)
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: (){
+                    friends.remove(widget.target_user);
+                    box.put(user_now.name, User(user_now.name, user_now.nickname, user_now.id, user_now.password, user_now.floor, user_now.nextlogin, user_now.reservated, user_now.warning, friends.toSet().toList(), user_now.chatlist));
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => FriendScreen(username: user_now.name))
+                    );
+                  },
+                  child: const Text(
+                    '친구 삭제',
+                    style: TextStyle(color: Palette.activeColor)
+                  ),
+                ),
+              ],
             ),
+            
           if (!friends.contains(widget.target_user))
             ElevatedButton(
               onPressed: (){
@@ -74,6 +121,10 @@ class OtherUserScreenState extends State<OtherUserScreen> {
                 setState(){
                   box = Hive.box<User>('userinfo');
                 };
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => FriendScreen(username: user_now.name))
+                );
               },
               child: const Text(
                 '친구추가',
@@ -124,6 +175,56 @@ class OtherUserScreenState extends State<OtherUserScreen> {
       ),
     );
   }
+}
+
+void showrepotPopup(BuildContext context, String title, String message, User target_user, String username_now) { // 팝업 함수
+  var box = Hive.box<User>('user_info1');
+  int newwarn = target_user.warning;
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text(title),
+        content: Text(message),
+        actions: <Widget>[
+          TextButton(
+            child: Text("OK"),
+            onPressed: () {
+              newwarn += 1;
+              box.put(target_user.name, User(target_user.name, target_user.nickname, target_user.id, target_user.password, target_user.floor, target_user.nextlogin, target_user.reservated, newwarn, target_user.friends, target_user.chatlist));
+              Navigator.of(context).pop();
+              showPopup(context, '알림', '신고되었습니다.', username_now);
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
+
+void showPopup(BuildContext context, String title, String message, String username_now) { // 팝업 함수
+  var box = Hive.box<User>('user_info1');
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text(title),
+        content: Text(message),
+        actions: <Widget>[
+          TextButton(
+            child: Text("OK"),
+            onPressed: () {
+              Navigator.of(context).pop();
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => FriendScreen(username: username_now))
+              );
+            },
+          ),
+        ],
+      );
+    },
+  );
 }
 
 // ElevatedButton addfriend_or_chat(BuildContext context, String target_user, User user_now){
