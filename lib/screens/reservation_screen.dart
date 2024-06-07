@@ -68,6 +68,8 @@ class ReservationScreenState extends State<ReservationScreen> {
 
     int times = boxwaiting.get(widget.floor)[widget.machinenum-1];
     int waiting_count = times ~/ 50 + ((times % 50)==0? 0 : 1);
+
+    bool machineisreserved = (user_now.reservated[1] == widget.floor) && (user_now.reservated[2] == widget.machinenum) || (user_now.reservated[3] == widget.floor) && (user_now.reservated[4] == widget.machinenum);
     if (widget.machinenum == 2 || widget.machinenum == 3){
       machine_kind = '세탁기';
     } else{
@@ -113,8 +115,8 @@ class ReservationScreenState extends State<ReservationScreen> {
             const SizedBox(height: 20),
             Center(
               child: ElevatedButton(
-                        child: ((user_now.reservated[1] == widget.floor) && (user_now.reservated[2] == widget.machinenum) || (user_now.reservated[3] == widget.floor) && (user_now.reservated[4] == widget.machinenum)) ?
-                          Text('대기열 취소', style: TextStyle(color: Colors.white)) : Text('대기열 등록', style: TextStyle(color: Colors.white)),
+                        child: 
+                          machineisreserved? Text('대기열 취소', style: TextStyle(color: Colors.white)) : Text('대기열 등록', style: TextStyle(color: Colors.white)),
                         style: ElevatedButton.styleFrom(
                           shape: RoundedRectangleBorder(	//모서리를 둥글게
                             borderRadius: BorderRadius.circular(3)
@@ -123,7 +125,41 @@ class ReservationScreenState extends State<ReservationScreen> {
                           fixedSize: Size(150, 40)
                         ),
                 onPressed: () {
-                  // 대기열 등록 및 취소 로직 추가
+                  if (machineisreserved){ // 대기열 취소 로직
+                    int floor_now = widget.floor;
+                    List<int> timelist = boxwaiting.get(floor_now);
+                    List<int> newreservation = userdetect(widget.username).reservated;
+
+                    // userdetect(widget.username).reservated[0] = 1;
+                    // if (widget.machinenum == 2 || widget.machinenum == 3){
+                    //   userdetect(widget.username).reservated[1] = widget.floor;
+                    //   userdetect(widget.username).reservated[2] = widget.machinenum;
+                    //   timelist[widget.machinenum-1] = timelist[widget.machinenum-1] + 50;
+                    // } else{
+                    //   userdetect(widget.username).reservated[3] = widget.floor;
+                    //   userdetect(widget.username).reservated[4] = widget.machinenum;
+                    //   timelist[widget.machinenum-1] = timelist[widget.machinenum-1] + 50;
+                    // }
+                    // boxwaiting.put(widget.floor, timelist);
+                     
+                    if (newreservation[1] != 0 && newreservation[3] != 0){
+                      newreservation[0] = 1; 
+                    } else{
+                      newreservation[0] = 0; 
+                    }
+                    if (widget.machinenum == 2 || widget.machinenum == 3){
+                      newreservation[1] = 0;
+                      newreservation[2] = 0;
+                      timelist[widget.machinenum-1] = timelist[widget.machinenum-1] - 50;
+                    } else{
+                      newreservation[3] = 0;
+                      newreservation[4] = 0;
+                      timelist[widget.machinenum-1] = timelist[widget.machinenum-1] - 50;
+                    }
+                    boxwaiting.put(widget.floor, timelist);
+                    box.put(widget.username, User(widget.username, user_now.nickname, user_now.id, user_now.password, user_now.floor, user_now.nextlogin, newreservation, user_now.warning, user_now.friends, user_now.chatlist));
+                    _showDialog('', '예약이 취소되었습니다.');
+                  } else{ // 대기열 등록 로직
                     int floor_now = widget.floor;
                     List<int> timelist = boxwaiting.get(floor_now);
                     List<int> newreservation = userdetect(widget.username).reservated;
@@ -152,7 +188,10 @@ class ReservationScreenState extends State<ReservationScreen> {
                     }
                     boxwaiting.put(widget.floor, timelist);
                     box.put(widget.username, User(widget.username, user_now.nickname, user_now.id, user_now.password, user_now.floor, user_now.nextlogin, newreservation, user_now.warning, user_now.friends, user_now.chatlist));
-                  _showDialog('', '결제를 진행하시겠습니까?');
+                    _showDialog('', '결제를 진행하시겠습니까?');
+                  }
+
+                  
                 },
               ),
             ),
