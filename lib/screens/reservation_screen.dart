@@ -164,6 +164,26 @@ class ReservationScreenState extends State<ReservationScreen> {
                     List<int> timelist = boxwaiting.get(floor_now);
                     List<int> newreservation = userdetect(widget.username).reservated;
 
+                    if ((widget.machinenum == 2 || widget.machinenum == 3) && newreservation[1] != 0){
+                      _showDialog('', '이미 다른 세탁기를 예약하셨습니다.');
+                    } else if((widget.machinenum == 5) && newreservation[3] != 0){
+                      _showDialog('', '이미 다른 건조기를 예약하셨습니다.');
+                      
+                    } else{
+                      newreservation[0] = 1;  
+                      if (widget.machinenum == 2 || widget.machinenum == 3){
+                        newreservation[1] = widget.floor;
+                        newreservation[2] = widget.machinenum;
+                        timelist[widget.machinenum-1] = timelist[widget.machinenum-1] + 50;
+                      } else{
+                        newreservation[3] = widget.floor;
+                        newreservation[4] = widget.machinenum;
+                        timelist[widget.machinenum-1] = timelist[widget.machinenum-1] + 50;
+                      }
+                      boxwaiting.put(widget.floor, timelist);
+                      box.put(widget.username, User(widget.username, user_now.nickname, user_now.id, user_now.password, user_now.floor, user_now.nextlogin, newreservation, user_now.warning, user_now.friends, user_now.chatlist));
+                      _showDialog('', '결제를 진행하시겠습니까?');
+                    }
                     // userdetect(widget.username).reservated[0] = 1;
                     // if (widget.machinenum == 2 || widget.machinenum == 3){
                     //   userdetect(widget.username).reservated[1] = widget.floor;
@@ -176,19 +196,7 @@ class ReservationScreenState extends State<ReservationScreen> {
                     // }
                     // boxwaiting.put(widget.floor, timelist);
 
-                    newreservation[0] = 1;  
-                    if (widget.machinenum == 2 || widget.machinenum == 3){
-                      newreservation[1] = widget.floor;
-                      newreservation[2] = widget.machinenum;
-                      timelist[widget.machinenum-1] = timelist[widget.machinenum-1] + 50;
-                    } else{
-                      newreservation[3] = widget.floor;
-                      newreservation[4] = widget.machinenum;
-                      timelist[widget.machinenum-1] = timelist[widget.machinenum-1] + 50;
-                    }
-                    boxwaiting.put(widget.floor, timelist);
-                    box.put(widget.username, User(widget.username, user_now.nickname, user_now.id, user_now.password, user_now.floor, user_now.nextlogin, newreservation, user_now.warning, user_now.friends, user_now.chatlist));
-                    _showDialog('', '결제를 진행하시겠습니까?');
+                    
                   }
 
                   
