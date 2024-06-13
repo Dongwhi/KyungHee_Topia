@@ -20,6 +20,7 @@ class ChattingScreenState extends State<ChattingScreen> {
   var box = Hive.box<User>('user_info1');
   var chatbox = Hive.box('chatting_info');
   final chatController = TextEditingController();
+  final scrollController = ScrollController();
 
   User userdetect(String user_name) {
     return box.values.firstWhere((user) => user.name == user_name);
@@ -60,29 +61,55 @@ class ChattingScreenState extends State<ChattingScreen> {
           SizedBox(
             height: 315,
             child: ListView.builder(
+                  reverse: true,
+                  controller: scrollController,
                   itemCount: chatcontents.length,
                   itemBuilder: (context, index) {
-                    return ListTile(
-                      leading: IconButton(
-                        onPressed: () {
-                          String target_user = chatusers[index];
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => OtherUserScreen(target_user: target_user, username: widget.username,),
-                            ),
-                          );
-                        },
-                        icon: Icon(Icons.account_circle_outlined),
-                      ),
-                      title: Row(
-                        children:
-                        [
-                          Text(chatusers[index].toString()),
-                          Text(chatcontents[index].toString()),
-                        ]
-                      ),
-                    );
+                    if (chatusers[index].toString().substring(1, chatusers[index].toString().indexOf(')')) == widget.username) {
+                      return ListTile(
+                        title: Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Card(
+                              margin: const EdgeInsets.fromLTRB(0, 20, 0, 10),
+                              child: Padding(
+                                padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
+                                child: Text(chatcontents[index].toString().substring(1, chatcontents[index].toString().indexOf(')')), style: TextStyle(fontSize: 16))
+                              )
+                            )
+                          ]
+                        ),
+                      );
+                    } else {
+                      return ListTile(
+                        leading: IconButton(
+                          onPressed: () {
+                            String target_user = chatusers[index];
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => OtherUserScreen(target_user: target_user, username: widget.username,),
+                              ),
+                            );
+                          },
+                          icon: const Icon(Icons.account_circle_outlined),
+                        ),
+                        title: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(chatusers[index].toString().substring(1, chatusers[index].toString().indexOf(')'))),
+                            Card(
+                              margin: const EdgeInsets.fromLTRB(0, 20, 0, 10),
+                              child: Padding(
+                                padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
+                                child: Text(chatcontents[index].toString().substring(1, chatcontents[index].toString().indexOf(')')), style: TextStyle(fontSize: 16))
+                              )
+                            )
+                          ]
+                        ),
+                      );
+                    }
+                    
                   },
                   shrinkWrap: true,
                 ),
@@ -119,7 +146,8 @@ class ChattingScreenState extends State<ChattingScreen> {
                 onPressed: (){
                   final chatting = chatController.text;
                   List<dynamic> new_chatlog = chatlog;
-                  new_chatlog.add({username_now: chatting});
+                  new_chatlog.insert(0, {username_now: chatting});
+                  scrollController.animateTo(0, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
                   chatbox.put(widget.chatting_name, new_chatlog);
                   setState(() {
                     chatbox = Hive.box('chatting_info');
