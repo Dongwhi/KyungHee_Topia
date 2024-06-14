@@ -374,6 +374,20 @@ class _HomeScreenState extends State<HomeScreen> {
                       ],
                     ),
                     display_machine(context, 4, floor, username_now), // 다섯 번째 건조기
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        SizedBox(
+                          width: 70,
+                        ),
+                        IconButton(
+                          onPressed: (){
+                            showPopup(context, '정보', '회색: 예약 없이 사용하는 세탁기\n초록색: 대기인원 0~1명\n주황색: 대기인원 2명\n빨간색: 대기인원 3명 이상');
+                          },
+                          icon: Icon(Icons.info),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               ],
