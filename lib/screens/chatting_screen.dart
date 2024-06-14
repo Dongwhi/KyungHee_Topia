@@ -41,6 +41,7 @@ class ChattingScreenState extends State<ChattingScreen> {
     var isNull = true;
     
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       backgroundColor: Palette.backgroundColor,
       appBar: AppBar(
         iconTheme: const IconThemeData(
@@ -56,163 +57,162 @@ class ChattingScreenState extends State<ChattingScreen> {
         ),
       ),
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          SizedBox(
-            height: 315,
-            child: ListView.builder(
-                  reverse: true,
-                  shrinkWrap: true,
-                  controller: scrollController,
-                  itemCount: chatcontents.length,
-                  itemBuilder: (context, index) {
-                    if (chatusers[index].toString().substring(1, chatusers[index].toString().indexOf(')')) == widget.username) {
-                      return ListTile(
-                        title: Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Card(
-                              margin: const EdgeInsets.fromLTRB(0, 20, 0, 10),
-                              child: Padding(
-                                padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
-                                child: Text(chatcontents[index].toString().substring(1, chatcontents[index].toString().indexOf(')')), style: TextStyle(fontSize: 16))
-                              )
-                            )
-                          ]
-                        ),
-                      );
-                    } else {
-                      return ListTile(
-                        leading: IconButton(
-                          onPressed: () {
-                            String target_user = chatusers[index];
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => OtherUserScreen(target_user: target_user, username: widget.username,),
-                              ),
-                            );
-                          },
-                          icon: const Icon(Icons.account_circle_outlined),
-                        ),
-                        title: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(chatusers[index].toString().substring(1, chatusers[index].toString().indexOf(')'))),
-                            Card(
-                              margin: const EdgeInsets.fromLTRB(0, 20, 0, 10),
-                              child: Padding(
-                                padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
-                                child: Text(chatcontents[index].toString().substring(1, chatcontents[index].toString().indexOf(')')), style: TextStyle(fontSize: 16))
-                              )
-                            )
-                          ]
-                        ),
-                      );
-                    }
-                    
-                  },
-                ),
-          ),
-              TextField(
-                controller: chatController,
-                onChanged: (String text) {
-                  if (text.isNotEmpty) {
-                    isNull = false;
-                  }
-                },
-                onSubmitted: (String text) {
-                  if (!isNull) {
-                    final chatting = chatController.text;
-                    List<dynamic> new_chatlog = chatlog;
-                    new_chatlog.insert(0, {username_now: chatting});
-                    scrollController.animateTo(0, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
-                    chatbox.put(widget.chatting_name, new_chatlog);
-                    setState(() {
-                      chatbox = Hive.box('chatting_info');
-                      chatusers = List.empty(growable : true);
-                      chatcontents = List.empty(growable : true);
-                    });
-                    chatController.clear();
-                  }
-                },
-              ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
               IconButton(
                 onPressed: (){
-                  if (!isNull) {
-                    final chatting = chatController.text;
-                    List<dynamic> new_chatlog = chatlog;
-                    new_chatlog.insert(0, {username_now: chatting});
-                    scrollController.animateTo(0, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
-                    chatbox.put(widget.chatting_name, new_chatlog);
-                    setState(() {
-                      chatbox = Hive.box('chatting_info');
-                      chatusers = List.empty(growable : true);
-                      chatcontents = List.empty(growable : true);
-                    });
-                    chatController.clear();
+                  showPopup(context, '채팅 탈퇴', '이 채팅방에서 탈퇴하시겠습니까?', widget.username ,widget.chatting_name);
+                },
+                icon: Icon(Icons.directions),
+              ),
+            ],
+          ),
+          Expanded(
+            child: Align(
+              alignment: Alignment.topCenter,
+              child: ListView.builder(
+                reverse: true,
+                shrinkWrap: true,
+                controller: scrollController,
+                itemCount: chatcontents.length,
+                itemBuilder: (context, index) {
+                  if (chatusers[index].toString().substring(1, chatusers[index].toString().indexOf(')')) == widget.username) {
+                    return ListTile(
+                      title: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Card(
+                            margin: const EdgeInsets.fromLTRB(0, 20, 0, 10),
+                            child: Padding(
+                              padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
+                              child: Text(chatcontents[index].toString().substring(1, chatcontents[index].toString().indexOf(')')), style: TextStyle(fontSize: 16))
+                            )
+                          )
+                        ]
+                      ),
+                    );
+                  } else {
+                    return ListTile(
+                      leading: IconButton(
+                        onPressed: () {
+                          String target_user = chatusers[index];
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => OtherUserScreen(target_user: target_user, username: widget.username,),
+                            ),
+                          );
+                        },
+                        icon: const Icon(Icons.account_circle_outlined),
+                      ),
+                      title: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(chatusers[index].toString().substring(1, chatusers[index].toString().indexOf(')'))),
+                          Card(
+                            margin: const EdgeInsets.fromLTRB(0, 20, 0, 10),
+                            child: Padding(
+                              padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
+                              child: Text(chatcontents[index].toString().substring(1, chatcontents[index].toString().indexOf(')')), style: TextStyle(fontSize: 16))
+                            )
+                          )
+                        ]
+                      ),
+                    );
                   }
                 },
-                //icon: Icon(Icons.directions),
-                icon: Icon(Icons.art_track),
               ),
-          Container(
-            height: 60,
-            color: Palette.khblue,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                IconButton(
-                  onPressed: (){
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => FriendScreen(username: widget.username)));
-                  },
-                  icon: const Icon(
-                    Icons.people,
-                    color: Palette.khsilver,
-                    size: 40,
-                  ),
-                ),
-                IconButton(
-                  onPressed: (){
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreen(username: widget.username)));
-                  },
-                  icon: const Icon(
-                    Icons.local_laundry_service,
-                    color: Palette.khsilver,
-                    size: 40,
-                  ),
-                ),
-                IconButton(
-                  onPressed: (){
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => ChatScreen(username: widget.username)));
-                  },
-                  icon: const Icon(
-                    Icons.chat,
-                    color: Palette.khsilver,
-                    size: 40,
-                  ),
-                ),
-              ],
+            )
+          ),
+          TextField(
+            decoration: const InputDecoration(
+              filled: true,
+              fillColor: Palette.khsilver
             ),
+            controller: chatController,
+            onChanged: (String text) {
+              if (text.isNotEmpty) {
+                isNull = false;
+              }
+            },
+            onSubmitted: (String text) {
+              if (!isNull) {
+                final chatting = chatController.text;
+                List<dynamic> new_chatlog = chatlog;
+                new_chatlog.insert(0, {username_now: chatting});
+                scrollController.animateTo(0, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+                chatbox.put(widget.chatting_name, new_chatlog);
+                setState(() {
+                  chatbox = Hive.box('chatting_info');
+                  chatusers = List.empty(growable : true);
+                  chatcontents = List.empty(growable : true);
+                });
+                chatController.clear();
+              }
+            },
           ),
         ],
+      ),
+      bottomNavigationBar: Container(
+        margin: EdgeInsets.zero,
+        color: Palette.khblue,
+        height: 60.0,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: <Widget>[
+            MaterialButton(
+              minWidth: 40,
+              onPressed: (){
+                Navigator.push(context, MaterialPageRoute(builder: (context) => FriendScreen(username: widget.username)));
+              },
+              child: const Icon(Icons.people, color: Palette.khsilver, size: 40)
+            ),
+            MaterialButton(
+              minWidth: 40,
+              onPressed: (){
+                Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreen(username: widget.username)));
+              },
+              child: const Icon(Icons.local_laundry_service, color: Palette.khsilver, size: 40)
+            ),
+            MaterialButton(
+              minWidth: 40,
+              onPressed: (){
+                Navigator.push(context, MaterialPageRoute(builder: (context) => ChatScreen(username: widget.username)));
+              },
+              child: const Icon(Icons.chat, color: Palette.khsilver, size: 40)
+            ),
+          ],
+        ),
       ),
     );
   }
   
-void _handleSubmitted(String text) {
-  // chatController.clear();
-  // final chatting = chatController.text;
-  // List<dynamic> new_chatlog = chatlog;
-  // new_chatlog.insert(0, {username_now: chatting});
-  // scrollController.animateTo(0, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
-  // chatbox.put(widget.chatting_name, new_chatlog);
-  // setState(() {
-  //   chatbox = Hive.box('chatting_info');
-  //   chatusers = List.empty(growable : true);
-  //   chatcontents = List.empty(growable : true);
-  // });
-}
+  void showPopup(BuildContext context, String title, String message, String username, String chatname) { // 팝업 함수
+    var box = Hive.box<User>('user_info1');
+    User user_now = box.values.firstWhere((user) => user.name == username);
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title),
+          content: Text(message),
+          actions: <Widget>[
+            TextButton(
+              child: Text("OK"),
+              onPressed: () {
+                List<String> new_chatlist = user_now.chatlist;
+                new_chatlist.remove(chatname);
+                box.put(username, User(username, user_now.nickname, user_now.id, user_now.password, user_now.floor, user_now.nextlogin, user_now.reservated, user_now.warning, user_now.friends, new_chatlist));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => ChatScreen(username: username)));
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   void dispose() {
