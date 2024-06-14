@@ -58,11 +58,21 @@ class ChattingScreenState extends State<ChattingScreen> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              IconButton(
+                onPressed: (){
+                  showPopup(context, '채팅 탈퇴', '이 채팅방에서 탈퇴하시겠습니까?', widget.username ,widget.chatting_name);
+                },
+                icon: Icon(Icons.directions),
+              ),
+            ],
+          ),
           SizedBox(
             height: 315,
             child: ListView.builder(
                   reverse: true,
-                  shrinkWrap: true,
                   controller: scrollController,
                   itemCount: chatcontents.length,
                   itemBuilder: (context, index) {
@@ -112,12 +122,13 @@ class ChattingScreenState extends State<ChattingScreen> {
                     }
                     
                   },
+                  shrinkWrap: true,
                 ),
           ),
               TextField(
                 controller: chatController,
                 onChanged: (String text) {
-                  if (text.isNotEmpty) {
+                  if (text.length > 0) {
                     isNull = false;
                   }
                 },
@@ -219,4 +230,29 @@ void _handleSubmitted(String text) {
     chatController.dispose();
     super.dispose();
   }
+}
+
+void showPopup(BuildContext context, String title, String message, String username, String chatname) { // 팝업 함수
+  var box = Hive.box<User>('user_info1');
+  User user_now = box.values.firstWhere((user) => user.name == username);
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text(title),
+        content: Text(message),
+        actions: <Widget>[
+          TextButton(
+            child: Text("OK"),
+            onPressed: () {
+              List<String> new_chatlist = user_now.chatlist;
+              new_chatlist.remove(chatname);
+              box.put(username, User(username, user_now.nickname, user_now.id, user_now.password, user_now.floor, user_now.nextlogin, user_now.reservated, user_now.warning, user_now.friends, new_chatlist));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => ChatScreen(username: username)));
+            },
+          ),
+        ],
+      );
+    },
+  );
 }

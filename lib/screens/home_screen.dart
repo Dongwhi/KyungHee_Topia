@@ -138,9 +138,17 @@ class _HomeScreenState extends State<HomeScreen> {
                     ],
                   ),
                 ),
-                SizedBox(
-                  height: 30,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                    width: MediaQuery.of(context).size.width - 50,
+                    height: 5,
+                    color: Colors.grey,
+                    ),
+                  ],
                 ),
+                
                 if (reservated) // 만약 예약을 한 상태라면 아래의 Text 위젯을 띄움.
                   Row(
                     children: [
@@ -212,9 +220,22 @@ class _HomeScreenState extends State<HomeScreen> {
                       
                     ],
                   ),
-                SizedBox(
-                  width: 30,
-                ),
+                if (reservated)
+                  SizedBox(
+                    height: 10,
+                  ),
+                if (reservated)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                      width: MediaQuery.of(context).size.width - 50,
+                      height: 5,
+                      color: Colors.grey,
+                      ),
+                    ],
+                  ),
+                
                 Row(
                   children: [
                     SizedBox(
@@ -265,7 +286,21 @@ class _HomeScreenState extends State<HomeScreen> {
                             showPopup(context, '알림', '해당 세탁기는 예약 없이 사용하는 공용 세탁기입니다.');
                           },
                         ),
-                        (boxwaiting.get(floor)[0] >= 60 )? Text((boxwaiting.get(floor)[0] ~/ 60).toString() + "h " + (boxwaiting.get(floor)[0] % 60).toString() + "m") : Text(boxwaiting.get(floor)[0].toString() + "m")
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text(
+                              '1',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(height: 20,),
+                            (boxwaiting.get(floor)[0] >= 60 )? Text((boxwaiting.get(floor)[0] ~/ 60).toString() + "h " + (boxwaiting.get(floor)[0] % 60).toString() + "m") : Text(boxwaiting.get(floor)[0].toString() + "m"),
+                            SizedBox(height: 40,),
+                          ],
+                        ),
+                        
                       ],
                     ),
                     display_machine(context, 1, floor, username_now), // 두 번째 세탁기
@@ -321,7 +356,21 @@ class _HomeScreenState extends State<HomeScreen> {
                             height:100,
                             ),
                           ),
-                        (boxwaiting.get(floor)[3] >= 60 )? Text((boxwaiting.get(floor)[3] ~/ 60).toString() + "h " + (boxwaiting.get(floor)[3] % 60).toString() + "m") : Text(boxwaiting.get(floor)[3].toString() + "m")
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Text(
+                              '4',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(height: 20,),
+                            (boxwaiting.get(floor)[3] >= 60 )? Text((boxwaiting.get(floor)[3] ~/ 60).toString() + "h " + (boxwaiting.get(floor)[3] % 60).toString() + "m") : Text(boxwaiting.get(floor)[3].toString() + "m"),
+                            SizedBox(height: 40,),
+                          ],
+                        ),
+                        
                       ],
                     ),
                     display_machine(context, 4, floor, username_now), // 다섯 번째 건조기
@@ -458,7 +507,21 @@ Stack display_machine(BuildContext context, int machine_index, int floor_now, St
                             height:100,
                             ),
                           ),
-                        (boxwaiting.get(floor_now)[machine_index] >= 60 )? Text((boxwaiting.get(floor_now)[machine_index] ~/ 60).toString() + "h " + (boxwaiting.get(floor_now)[machine_index] % 60).toString() + "m") : Text(boxwaiting.get(floor_now)[machine_index].toString() + "m")
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Text(
+                              '${machine_index+1}',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(height: 20,),
+                            (boxwaiting.get(floor_now)[machine_index] >= 60 )? Text((boxwaiting.get(floor_now)[machine_index] ~/ 60).toString() + "h " + (boxwaiting.get(floor_now)[machine_index] % 60).toString() + "m") : Text(boxwaiting.get(floor_now)[machine_index].toString() + "m"),
+                            SizedBox(height: 40,),
+                          ],
+                        ),
+                        
                       ],
                     );
 }
