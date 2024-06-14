@@ -39,6 +39,9 @@ class _NoLoginHomeScreenState extends State<NoLoginHomeScreen> {
             color: Palette.backgroundColor, // Contrainer 위젯의 색을 설정.
             child: Column( // Container 안에 들어갈 위젯을 설정. 여기서는 Container 안에 Column을 넣음.
               children: [ // Column 위젯의 children 안에 Column에 들어갈 위젯들을 담으면 됨.
+                SizedBox(
+                  height: 30,
+                ),
                 Container( // Column 안에 들어갈 첫 위젯을 Container(직사각형 위젯)로 설정.
                   child: Row( // Container 안에 Row 위젯을 넣음. Row 위젯은 안에 여러 위젯이 가로로 나열됨. 여기엔 층 선택, 프로필 두 개가 들어감.
                     mainAxisAlignment: MainAxisAlignment.spaceAround, // 나열 방법 설정.
@@ -103,13 +106,33 @@ class _NoLoginHomeScreenState extends State<NoLoginHomeScreen> {
                     ],
                   ),
                 ),
-                Text( // 세탁기 텍스트 띄우기.
-                  '세탁기',
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                    width: MediaQuery.of(context).size.width - 50,
+                    height: 5,
+                    color: Colors.grey,
+                    ),
+                  ],
                 ),
-                SizedBox(height: 10),
+                Row(
+                  children: [
+                    SizedBox(
+                      width: 30,
+                    ),
+                    Text( // 세탁기 텍스트 띄우기.
+                      '세탁기',
+                      style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+                
+                SizedBox(
+                  height: 20,
+                ),
                 Row( // 세탁기 아이콘들 띄우기.
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: 
                   // List.generate(3, (index) {
                   //   return IconButton(
@@ -125,6 +148,9 @@ class _NoLoginHomeScreenState extends State<NoLoginHomeScreen> {
                   //   );
                   // }),
                   [
+                    SizedBox(
+                      width: 30,
+                    ),
                     Stack( // 첫 번째 세탁기
                       alignment: Alignment.center,
                       children: [
@@ -132,15 +158,29 @@ class _NoLoginHomeScreenState extends State<NoLoginHomeScreen> {
                           child: Container(
                             child: Image.asset(
                               "assets/icons/machine.jpg",
-                              width:50,
-                              height:50,
+                              width:100,
+                              height:100,
                               ),
                           ),
                           onTap: () {
-                            showPopup(context, '알림', '해당 세탁기는 예약 불가능한 세탁기입니다.');
+                            showPopup(context, '알림', '해당 세탁기는 예약 없이 사용하는 공용 세탁기입니다.');
                           },
                         ),
-                        Text(boxwaiting.get(floor)[0].toString())
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text(
+                              '1',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(height: 20,),
+                            (boxwaiting.get(floor)[0] >= 60 )? Text((boxwaiting.get(floor)[0] ~/ 60).toString() + "h " + (boxwaiting.get(floor)[0] % 60).toString() + "m") : Text(boxwaiting.get(floor)[0].toString() + "m"),
+                            SizedBox(height: 40,),
+                          ],
+                        ),
+                        
                       ],
                     ),
                     display_machine(context, 1, floor), // 두 번째 세탁기
@@ -148,13 +188,23 @@ class _NoLoginHomeScreenState extends State<NoLoginHomeScreen> {
                   ],
                 ),
                 SizedBox(height: 30), // 빈 공간 만들기.
-                Text( // 건조기 텍스트 띄우기.
-                  '건조기',
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                Row(
+                  children: [
+                    SizedBox(
+                      width: 30,
+                    ),
+                    Text( // 건조기 텍스트 띄우기.
+                      '건조기',
+                      style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                    ),
+                  ],
                 ),
-                SizedBox(height: 10),
+                
+                SizedBox(
+                  height: 20,
+                ),
                 Row( // 건조기 아이콘들 띄우기.
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: 
                   // List.generate(2, (index) {
                   //   return IconButton(
@@ -170,23 +220,54 @@ class _NoLoginHomeScreenState extends State<NoLoginHomeScreen> {
                   //   );
                   // }),
                   [
+                    SizedBox(
+                      width: 30,
+                    ),
                     Stack(
                       alignment: Alignment.center,
                       children: [
                         InkWell(
                           onTap: () {
-                            showPopup(context, '알림', '해당 건조기는 예약 불가능한 세탁기입니다.');
+                            showPopup(context, '알림', '해당 건조기는 예약 없이 사용하는 공용 건조기입니다.');
                           },
                           child: Image.asset(
                             "assets/icons/machine.jpg",
-                            width:50,
-                            height:50,
+                            width:100,
+                            height:100,
                             ),
                           ),
-                        Text(boxwaiting.get(floor)[3].toString())
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Text(
+                              '4',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(height: 20,),
+                            (boxwaiting.get(floor)[3] >= 60 )? Text((boxwaiting.get(floor)[3] ~/ 60).toString() + "h " + (boxwaiting.get(floor)[3] % 60).toString() + "m") : Text(boxwaiting.get(floor)[3].toString() + "m"),
+                            SizedBox(height: 40,),
+                          ],
+                        ),
+                        
                       ],
                     ),
                     display_machine(context, 4, floor), // 다섯 번째 건조기
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        SizedBox(
+                          width: 70,
+                        ),
+                        IconButton(
+                          onPressed: (){
+                            showPopup(context, '정보', '회색: 예약 없이 사용하는 세탁기\n초록색: 대기인원 0~1명\n주황색: 대기인원 2명\n빨간색: 대기인원 3명 이상');
+                          },
+                          icon: Icon(Icons.info),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               ],
@@ -282,11 +363,25 @@ Stack display_machine(BuildContext context, int machine_index, int floor_now){
                           },
                           child: Image.asset(
                             image_location,
-                            width:50,
-                            height:50,
+                            width:100,
+                            height:100,
                             ),
                           ),
-                        Text(boxwaiting.get(floor_now)[machine_index].toString())
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Text(
+                              '${machine_index+1}',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(height: 20,),
+                            (boxwaiting.get(floor_now)[machine_index] >= 60 )? Text((boxwaiting.get(floor_now)[machine_index] ~/ 60).toString() + "h " + (boxwaiting.get(floor_now)[machine_index] % 60).toString() + "m") : Text(boxwaiting.get(floor_now)[machine_index].toString() + "m"),
+                            SizedBox(height: 40,),
+                          ],
+                        ),
+                        
                       ],
                     );
 }
