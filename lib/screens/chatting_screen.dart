@@ -33,12 +33,12 @@ class ChattingScreenState extends State<ChattingScreen> {
   Widget build(BuildContext context) {
     User user_now = userdetect(widget.username);
     String username_now = widget.username;
-    //List<Map<dynamic, dynamic>> chatlog = chatbox.get(widget.chatting_name);
     List<dynamic> chatlog = chatbox.get(widget.chatting_name);
     chatlog.forEach((chat){
       chatusers.add(chat.keys);
       chatcontents.add(chat.values);
     });
+    var isNull = true;
     
     return Scaffold(
       backgroundColor: Palette.backgroundColor,
@@ -114,51 +114,48 @@ class ChattingScreenState extends State<ChattingScreen> {
                   shrinkWrap: true,
                 ),
           ),
-          
-
-          // Row(
-          //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //   children: [
-          //     TextField(
-          //       controller: chatController,
-          //       //obscureText: true, // 입력한거 안보이게 하는 코드
-          //     ),
-          //     IconButton(
-          //       onPressed: (){
-          //         final chatting = chatController.text;
-          //         List<dynamic> new_chatlog = chatlog;
-          //         new_chatlog.add({username_now: chatting});
-          //         chatbox.put(widget.chatting_name, new_chatlog);
-          //         setState(() {
-          //           chatbox = Hive.box('chatting_info');
-          //         });
-          //       },
-          //       //icon: Icon(Icons.directions),
-          //       icon: Icon(Icons.art_track),
-          //     ),
-          //   ],
-          // ),
               TextField(
                 controller: chatController,
-                //obscureText: true, // 입력한거 안보이게 하는 코드
+                onChanged: (String text) {
+                  if (text.length > 0) {
+                    isNull = false;
+                  }
+                },
+                onSubmitted: (String text) {
+                  if (!isNull) {
+                    final chatting = chatController.text;
+                    List<dynamic> new_chatlog = chatlog;
+                    new_chatlog.insert(0, {username_now: chatting});
+                    scrollController.animateTo(0, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+                    chatbox.put(widget.chatting_name, new_chatlog);
+                    setState(() {
+                      chatbox = Hive.box('chatting_info');
+                      chatusers = List.empty(growable : true);
+                      chatcontents = List.empty(growable : true);
+                    });
+                    chatController.clear();
+                  }
+                },
               ),
               IconButton(
                 onPressed: (){
-                  final chatting = chatController.text;
-                  List<dynamic> new_chatlog = chatlog;
-                  new_chatlog.insert(0, {username_now: chatting});
-                  scrollController.animateTo(0, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
-                  chatbox.put(widget.chatting_name, new_chatlog);
-                  setState(() {
-                    chatbox = Hive.box('chatting_info');
-                    chatusers = List.empty(growable : true);
-                    chatcontents = List.empty(growable : true);
-                  });
+                  if (!isNull) {
+                    final chatting = chatController.text;
+                    List<dynamic> new_chatlog = chatlog;
+                    new_chatlog.insert(0, {username_now: chatting});
+                    scrollController.animateTo(0, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+                    chatbox.put(widget.chatting_name, new_chatlog);
+                    setState(() {
+                      chatbox = Hive.box('chatting_info');
+                      chatusers = List.empty(growable : true);
+                      chatcontents = List.empty(growable : true);
+                    });
+                    chatController.clear();
+                  }
                 },
                 //icon: Icon(Icons.directions),
                 icon: Icon(Icons.art_track),
               ),
-
           Container(
             height: 60,
             color: Palette.khblue,
@@ -203,6 +200,20 @@ class ChattingScreenState extends State<ChattingScreen> {
     );
   }
   
+void _handleSubmitted(String text) {
+  // chatController.clear();
+  // final chatting = chatController.text;
+  // List<dynamic> new_chatlog = chatlog;
+  // new_chatlog.insert(0, {username_now: chatting});
+  // scrollController.animateTo(0, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+  // chatbox.put(widget.chatting_name, new_chatlog);
+  // setState(() {
+  //   chatbox = Hive.box('chatting_info');
+  //   chatusers = List.empty(growable : true);
+  //   chatcontents = List.empty(growable : true);
+  // });
+}
+
   @override
   void dispose() {
     chatController.dispose();
