@@ -62,6 +62,7 @@ class ChattingScreenState extends State<ChattingScreen> {
             height: 315,
             child: ListView.builder(
                   reverse: true,
+                  shrinkWrap: true,
                   controller: scrollController,
                   itemCount: chatcontents.length,
                   itemBuilder: (context, index) {
@@ -111,13 +112,12 @@ class ChattingScreenState extends State<ChattingScreen> {
                     }
                     
                   },
-                  shrinkWrap: true,
                 ),
           ),
               TextField(
                 controller: chatController,
                 onChanged: (String text) {
-                  if (text.length > 0) {
+                  if (text.isNotEmpty) {
                     isNull = false;
                   }
                 },
