@@ -21,7 +21,7 @@ class LoginScreenState extends State<LoginScreen> {
   final _firstfloorController = TextEditingController();
   final _secondfloorController = TextEditingController();
   final _thirdfloorController = TextEditingController();
-  bool _nextLogin = false;
+  // bool _nextLogin = false;
   
   //final box = Hive.box<User>('user_info');
   final box = Hive.box<User>('user_info1');
@@ -288,7 +288,7 @@ class LoginScreenState extends State<LoginScreen> {
                             borderRadius: BorderRadius.circular(3)
                           ),
                           backgroundColor: Palette.khblue,
-                          fixedSize: Size(150, 40),
+                          fixedSize: Size(180, 40),
                         ),
                         onPressed: () {
                           // 핸도폰용 유저, 세탁기 시간, 채팅창 수동으로 넣는 기능
@@ -345,20 +345,7 @@ class LoginScreenState extends State<LoginScreen> {
                     ],
                   ),
                   const SizedBox(height: 16),
-                  // Stay Logged In Checkbox
-                  Row(
-                    children: <Widget>[
-                      Checkbox(
-                        value: _nextLogin,
-                        onChanged: (bool? value) {
-                          setState(() {
-                            _nextLogin = value!;
-                          });
-                        },
-                      ),
-                      const Text('로그인 유지'),
-                    ],
-                  ),
+                  // // Stay Logged In Checkbox 없앰
                   const SizedBox(height: 16),
                   // Signup
                   Center(
